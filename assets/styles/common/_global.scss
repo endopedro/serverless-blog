@@ -1,0 +1,30 @@
+body,
+html {
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+::selection {
+  color: $white;
+  background: $primary;
+  text-shadow: none;
+}
+
+::-moz-selection {
+  color: $white;
+  background: $primary;
+  text-shadow: none;
+}
+
+b,
+strong {
+  font-weight: 600;
+}
+
+.wrap {
+  overflow: hidden;
+}
+
+a {
+  text-decoration: none !important;
+}
