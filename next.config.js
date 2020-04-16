@@ -4,6 +4,7 @@ const withCSS = require('@zeit/next-css')
 const path = require('path')
 const withPlugins = require('next-compose-plugins')
 const webpack = require('webpack')
+require('dotenv').config()
 
 if (typeof require !== "undefined") {
   require.extensions[".less"] = () => { };
@@ -11,6 +12,9 @@ if (typeof require !== "undefined") {
 }
 
 const nextConfig = {
+  env: {
+    MONGODB_URI: process.env.MONGODB_URI,
+  },
   exportPathMap: () => {
     return {
       '/': { page: '/' },
