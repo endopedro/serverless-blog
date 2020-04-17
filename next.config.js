@@ -22,6 +22,8 @@ const nextConfig = {
     };
   },
   webpack: (config, options) => {
+    config.resolve.alias['@lib'] = path.join(__dirname, 'lib')
+    config.resolve.alias['@middlewares'] = path.join(__dirname, 'middlewares')
     config.resolve.alias['@components'] = path.join(__dirname, 'components')
     config.plugins.push(
       new webpack.ProvidePlugin({
