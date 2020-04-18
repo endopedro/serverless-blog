@@ -11,7 +11,7 @@ const SignupPage = () => {
   // call whenever user changes (ex. right after signing up successfully)
   useEffect(() => {
     // redirect to home if user is authenticated
-    if (user) Router.replace('/')
+    // if (user) Router.replace('/')
   }, [user])
 
   const handleSubmit = async (e) => {
