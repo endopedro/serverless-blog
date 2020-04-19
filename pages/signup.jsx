@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Router from 'next/router'
-
-import { useUser } from '../lib/hooks'
+import { useUser } from '@lib/hooks'
 
 const SignupPage = () => {
   const [user, { mutate }] = useUser()
   const [errorMsg, setErrorMsg] = useState('')
-  
-  // call whenever user changes (ex. right after signing up successfully)
   useEffect(() => {
     // redirect to home if user is authenticated
-    // if (user) Router.replace('/')
+    if (user) Router.replace('/')
   }, [user])
 
   const handleSubmit = async (e) => {
@@ -28,7 +25,6 @@ const SignupPage = () => {
     })
     if (res.status === 201) {
       const userObj = await res.json()
-      // writing our user object to the state
       mutate(userObj)
     } else {
       setErrorMsg(await res.text())
