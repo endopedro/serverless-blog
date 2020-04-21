@@ -1,0 +1,35 @@
+@include media-breakpoint-up(md) {
+  .main-nav {
+      height: 3.75rem;
+      padding: 0 1rem;
+
+    .navbar-collapse {
+      height: 100%;
+
+      .navbar-nav {
+        height: 100%;
+
+        &:first-child {
+          border-left: 1px solid #eee;
+        }
+    
+        .nav-link {
+          height: 100%;
+          padding: 0 1.625rem;
+          display: flex;
+          align-items: center;
+          border-right: 1px solid #eee;
+          transition: 0.3s;
+
+          &:hover {
+            background-color: #eee;
+          }
+        }
+      }
+
+      .main-nav-login {
+        display: flex;
+      }
+    }
+  }
+}
