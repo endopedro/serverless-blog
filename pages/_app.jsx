@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import Layout from '@components/layout'
+import Layout from '@components/layout/layout'
 
 import './../assets/styles/main.scss'
 
