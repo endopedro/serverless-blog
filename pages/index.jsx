@@ -1,30 +1,18 @@
 import React from 'react'
-import { useUser } from '@lib/hooks'
+import { Container, Row, Col } from 'react-bootstrap'
+
+import PostCard from '@components/postCard'
 
 const IndexPage = () => {
-  const [user] = useUser()
-
   return (
-    <>
-      <style jsx>
-        {`
-          p {
-            text-align: center;
-            color: #888;
-          }
-        `}
-      </style>
-      <div>
-        <h2>
-          Hello,
-          {' '}
-          {user ? user.name : 'stranger'}
-          !
-        </h2>
-        <p>Have a wonderful day.</p>
-      </div>
-    </>
-  );
-};
+    <Container>
+      <Row>
+        {[1,2,3].map(item => {
+          return <Col lg={4}><PostCard /></Col>
+        })}
+      </Row>
+    </Container>    
+  )
+}
 
 export default IndexPage
