@@ -2,7 +2,7 @@ import React from 'react'
 import { useUser } from '@lib/hooks'
 
 const IndexPage = () => {
-  const [user] = useUser();
+  const [user] = useUser()
 
   return (
     <>
