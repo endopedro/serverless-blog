@@ -1,17 +1,14 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 
-import Layout from '@components/layout/layout'
-import PostCard from '@components/postCard'
+import Layout from '@components/admin/layout/layout'
 
 const IndexPage = () => {
   return (
     <Layout>
       <Container>
         <Row>
-          {[1,2,3].map(item => {
-            return <Col lg={4}><PostCard /></Col>
-          })}
+          <h1>ADMIN INDEX</h1>
         </Row>
       </Container>    
     </Layout>

@@ -29,6 +29,7 @@ const nextConfig = {
     config.resolve.alias['@lib'] = path.join(__dirname, 'lib')
     config.resolve.alias['@middlewares'] = path.join(__dirname, 'middlewares')
     config.resolve.alias['@components'] = path.join(__dirname, 'components')
+    config.resolve.alias['@assets'] = path.join(__dirname, 'assets')
     config.plugins.push(
       new webpack.ProvidePlugin({
         $: "jquery",
