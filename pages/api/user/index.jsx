@@ -7,7 +7,6 @@ import { extractUser } from '@lib/api-helpers'
 const upload = multer({ dest: '/tmp' })
 const handler = nextConnect()
 
-/* eslint-disable camelcase */
 const {
   hostname: cloud_name,
   username: api_key,
