@@ -18,7 +18,6 @@ const NewPost = () => {
     e.preventDefault()
     const body = {
       user: user,
-      author: user,
       date: new Date(),
       title: e.currentTarget.title.value,
       slug: slugify(e.currentTarget.slug.value),

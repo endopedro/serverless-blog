@@ -8,7 +8,6 @@ handler.use(middleware)
 handler.post(async (req, res) => {
   const { 
     user,
-    author,
     date,
     title,
     slug,
@@ -19,8 +18,11 @@ handler.post(async (req, res) => {
     tags,
     action
   } = req.body
+
+  const email = user.email
+  const author = await req.db.collection('users').findOne({ email })
   
-  if (!user || (await req.db.collection('users').countDocuments({ slug })) > 0) {
+  if (!user && author.length > 0) {
     res.status(403).send('Not logged.')
     return
   }
@@ -35,10 +37,11 @@ handler.post(async (req, res) => {
     return
   }
 
+  
   const post = await req.db
     .collection('posts')
     .insertOne({ 
-      author,
+      author_id: author._id,
       date,
       title,
       slug,
