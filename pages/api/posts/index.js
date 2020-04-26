@@ -1,5 +1,6 @@
 import nextConnect from 'next-connect'
 import database from '@middlewares/database'
+import { extractPosts } from '@lib/api-helpers'
 
 const handler = nextConnect()
 
@@ -17,7 +18,7 @@ handler.get(async (req, res) => {
          }
     }
   ]).toArray()
-  res.json(posts)
+  res.json(extractPosts(posts))
 })
 
 export default handler

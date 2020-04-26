@@ -19,8 +19,8 @@ handler.post(async (req, res) => {
     action
   } = req.body
 
-  const email = user.email
-  const author = await req.db.collection('users').findOne({ email })
+  const user_id = user._id
+  const author = await req.db.collection('users').findOne({ _id: user_id })
   
   if (!user && author.length > 0) {
     res.status(403).send('Not logged.')
@@ -41,7 +41,7 @@ handler.post(async (req, res) => {
   const post = await req.db
     .collection('posts')
     .insertOne({ 
-      author_id: author._id,
+      author_id: user_id,
       date,
       title,
       slug,
