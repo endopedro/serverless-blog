@@ -1,0 +1,11 @@
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background-color: $gray-800;
+
+  .sidebar-item {
+    color: $white;
+    padding: 1rem;
+    border: $border-width $border-color solid;
+  }
+}

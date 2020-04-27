@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import Head from 'next/head'
-import Router from 'next/router'
+import React, { useState } from 'react'
 import { useUser } from '@lib/hooks'
 import slugify from 'slugify'
 
@@ -8,11 +6,6 @@ const NewPost = () => {
   const [user, { mutate }] = useUser()
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
-
-  // useEffect(() => {
-  //   redirect to home if user is not authenticated
-  //   if (!user) Router.push('/login')
-  // }, [user])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -41,13 +34,8 @@ const NewPost = () => {
     }
   }
 
-  if (!user) return "You're Not logged in."
-
   return (
     <>
-      <Head>
-        <title>Novo post</title>
-      </Head>
       <div>
         <h2>Novo Post</h2>
         <form onSubmit={handleSubmit}>
