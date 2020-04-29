@@ -14,7 +14,7 @@ export default ({ children }) => {
       <Header>
         <MainNav />
       </Header>
-      <main>{children}</main>
+      <main className="page">{children}</main>
       <Footer />
     </>
   )

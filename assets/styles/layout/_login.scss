@@ -1,0 +1,51 @@
+.login {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: $info;
+
+  a {
+    color: $info;
+    transition: all 0.3s;
+
+    &:hover {
+      color: lighten( $info, 50% ) !important;
+    }
+  }
+
+  .login-box {
+    width: 300px;
+    text-align: center;
+    background: linear-gradient(to right, rgba(30,49,57,1) 0%,rgba(39,69,83,1) 100%);
+    color: $white;
+    box-shadow: $box-shadow-lg;
+    padding: 2rem 1rem;
+
+    .login-title {
+      margin-bottom: 3rem;
+    }
+
+    .login-form {
+      width: 100%;
+    }
+
+    .login-alert {
+      font-size: 0.875rem;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      color: lighten($red, 20%);
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .login {
+    .login-box {
+      width: 450px;
+      padding: 3rem 2rem;
+    }
+  }
+}

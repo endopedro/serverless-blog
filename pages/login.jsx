@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { Form, Button } from 'react-bootstrap'
+
 import { useUser } from '@lib/hooks'
+import LoginLayout from '@components/layout/loginLayout'
 
 const LoginPage = () => {
   const router = useRouter()
@@ -33,35 +36,27 @@ const LoginPage = () => {
   }
 
   return (
-    <>
+    <LoginLayout>
       <Head>
-        <title>Sign in</title>
+        <title>Login</title>
       </Head>
-      <h2>Sign in</h2>
-      <form onSubmit={onSubmit}>
-        {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
-        <label htmlFor="email">
-          <input
-            id="email"
-            type="email"
-            name="email"
-            placeholder="Email address"
-          />
-        </label>
-        <label htmlFor="password">
-          <input
-            id="password"
-            type="password"
-            name="password"
-            placeholder="Password"
-          />
-        </label>
-        <button type="submit">Sign in</button>
-        <Link href="/forget-password">
-          <a>Forget password</a>
-        </Link>
-      </form>
-    </>
+      <h3 className="login-title">Login</h3>
+      <Form className="login-form" onSubmit={onSubmit}>
+        {errorMsg ? <Form.Text className="login-alert">{errorMsg}</Form.Text> : ''}
+        <Form.Group controlId="formBasicEmail">
+          <Form.Control id="email" type="email" placeholder="Digite seu e-mail..." required />
+        </Form.Group>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Control id="password" type="password" placeholder="Digite sua senha..." required />
+        </Form.Group>
+        <Form.Group>
+          <Link href="/forget-password"><a>Esqueci minha senha</a></Link>
+        </Form.Group>
+        <Button variant="info" type="submit">
+          Login
+        </Button>
+      </Form>
+    </LoginLayout>
   )
 }
 
