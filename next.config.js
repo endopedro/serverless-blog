@@ -12,6 +12,9 @@ if (typeof require !== "undefined") {
 }
 
 const nextConfig = {
+  node: {
+    dns: 'empty'
+  },
   env: {
     MONGODB_URI: process.env.MONGODB_URI,
     DB_NAME: process.env.DB_NAME,
