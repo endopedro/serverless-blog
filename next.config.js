@@ -12,9 +12,6 @@ if (typeof require !== "undefined") {
 }
 
 const nextConfig = {
-  node: {
-    dns: 'empty'
-  },
   env: {
     MONGODB_URI: process.env.MONGODB_URI,
     DB_NAME: process.env.DB_NAME,
@@ -29,6 +26,14 @@ const nextConfig = {
     };
   },
   webpack: (config, options) => {
+    config.node = {
+      dns: 'empty',
+      fs: 'empty',
+      module: 'empty',
+      net: 'empty',
+      tls: 'empty',
+      'mongodb-client-encryption': 'empty'
+    }
     config.resolve.alias['@lib'] = path.join(__dirname, 'lib')
     config.resolve.alias['@middlewares'] = path.join(__dirname, 'middlewares')
     config.resolve.alias['@components'] = path.join(__dirname, 'components')
@@ -51,7 +56,7 @@ const nextConfig = {
         options: {
           limit: 100000,
           name: '[name].[ext]'
-        }
+        },
       }
     })
     return config;
