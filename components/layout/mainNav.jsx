@@ -25,11 +25,11 @@ const MainNav = () => {
           <Nav.Link>Arquivo</Nav.Link>
         </Nav>
         <div className="ml-auto main-nav-login">
-          <Nav.Link>Hello, {user ? user.name : 'stranger'}</Nav.Link>
+          {/* <Nav.Link>Hello, {user ? user.name : 'stranger'}</Nav.Link> */}
           {!user ? (
             <>
               <Link href="/login" passHref><Nav.Link>Login</Nav.Link></Link>
-              <Link href="/signup" passHref><Nav.Link>Cadastrar</Nav.Link></Link>
+              {/* <Link href="/signup" passHref><Nav.Link>Cadastrar</Nav.Link></Link> */}
             </>
           ) : (
             <>

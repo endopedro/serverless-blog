@@ -22,7 +22,7 @@ const IndexPage = () => {
       <Container>
         <Row>
           {posts.map(post => {
-            return <Col lg={4}><PostCard post={post}/></Col>
+            return <Col lg={4} className="mb-4"><PostCard post={post}/></Col>
           })}
         </Row>
       </Container>    

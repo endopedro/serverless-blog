@@ -31,8 +31,7 @@ const nextConfig = {
       fs: 'empty',
       module: 'empty',
       net: 'empty',
-      tls: 'empty',
-      'mongodb-client-encryption': 'empty'
+      tls: 'empty'
     }
     config.resolve.alias['@lib'] = path.join(__dirname, 'lib')
     config.resolve.alias['@middlewares'] = path.join(__dirname, 'middlewares')
