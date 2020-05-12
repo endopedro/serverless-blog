@@ -36,8 +36,7 @@ const NewPost = () => {
 
   return (
     <>
-      <div>
-        <h2>Novo Post</h2>
+      <div className="admin-content-element">
         <form onSubmit={handleSubmit}>
           {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
           {successMsg ? <p style={{ color: 'green' }}>{successMsg}</p> : null}

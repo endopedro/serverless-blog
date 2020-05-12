@@ -8,22 +8,22 @@ import Login from '@pages/login'
 import { useUser } from '@lib/hooks'
 
 const IndexPage = () => {
-  const actions = {
-    dashboard: {
+  const actions = [
+    {
       label: "Dashboard",
       content: <h1>ADMIN DASHBOARD</h1>,
     },
-    newPost: {
+    {
       label: "Novo Post",
       content: <NewPost/>
     }
-  }
+  ]
 
   const [loading, setLoading] = useState(true)
   const [user, { mutate }] = useUser()
   const [isLogged, setIsLogged] = useState(false)  
-  const [action, setAction] = useState(actions.dashboard)  
-  
+  const [action, setAction] = useState(actions[1])  
+
   useEffect(() => {
     if (user) {
       setIsLogged(true)
@@ -37,14 +37,20 @@ const IndexPage = () => {
   if (!isLogged) return <Login/>
 
   const handleActions = action => {
-    setAction(actions[action])
+    setAction(action)
   }
 
   return (
     <Layout>
       <div className="admin">
-        <Sidebar handleActions={handleActions} actions={actions}/>
+        <Sidebar 
+          handleActions={handleActions} 
+          actions={actions}
+          activeAction={action}
+          user={user}
+        />
         <div className="admin-content">
+          <h2 className="admin-action-label">{action.label}</h2>
           {action.content}
         </div>
 
