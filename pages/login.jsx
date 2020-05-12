@@ -11,9 +11,14 @@ const LoginPage = () => {
   const router = useRouter()
   const [errorMsg, setErrorMsg] = useState('')
   const [user, { mutate }] = useUser()
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
-    // redirect to home if user is authenticated
-    if (user) router.push('/')
+    if (user) {
+      router.push('/admin')
+    } else if (user === null) {
+      setLoading(false)
+    }
   }, [user])
 
   async function onSubmit(e) {
@@ -34,6 +39,8 @@ const LoginPage = () => {
       setErrorMsg('Incorrect username or password. Try again!')
     }
   }
+
+  if (loading) return <h1>LOADING...</h1>
 
   return (
     <LoginLayout>
