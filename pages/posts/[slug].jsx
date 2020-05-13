@@ -1,17 +1,23 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import nextConnect from 'next-connect'
+import fetch from 'isomorphic-unfetch'
 
-import database from '@middlewares/database'
-
-const Post = () => {
+ const Post = ({ post }) => {
   return (
     <Container>
       <Row>
         <h1>Post</h1>
+        {post.title}
       </Row>
-    </Container> 
+    </Container>
   )
+}
+
+Post.getInitialProps = async (context) => {
+  const { slug } = context.query
+  const res = await fetch(`${process.env.WEB_URI}/api/posts/get?slug=${slug}`)
+  const json = await res.json()
+  return { post: json }
 }
 
 export default Post
