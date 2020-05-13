@@ -2,6 +2,14 @@ import React, { useState } from 'react'
 import { useUser } from '@lib/hooks'
 import slugify from 'slugify'
 import { Form, Button, Col } from 'react-bootstrap'
+import dynamic from 'next/dynamic'
+import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
+import draftToHtml from 'draftjs-to-html'
+
+const Editor = dynamic(
+  () => import('react-draft-wysiwyg').then(mod => mod.Editor),
+  { ssr: false }
+)
 
 const NewPost = () => {
   const [user, { mutate }] = useUser()
@@ -13,7 +21,7 @@ const NewPost = () => {
     title: '',
     slug: '',
     category: '',
-    content: '',
+    content: EditorState.createEmpty(),
     clicks: 0,
     thumb: 'https://abduzeedo.com/sites/default/files/styles/home_cover/public/originals/abdz_infrared_arashiyama_mockup_0.jpg',
     tags: ["carros", "casas", "toalhas"],
@@ -22,18 +30,6 @@ const NewPost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // const body = {
-    //   user: user,
-    //   date: new Date(),
-    //   title: e.currentTarget.title.value,
-    //   slug: slugify(e.currentTarget.slug.value),
-    //   category: e.currentTarget.category.value,
-    //   content: e.currentTarget.content.value,
-    //   clicks: 0,
-    //   thumb: e.currentTarget.thumb.value,
-    //   tags: ["carros", "casas", "toalhas"],
-    //   action: "create"
-    // }
     const res = await fetch('/api/posts/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -45,6 +41,10 @@ const NewPost = () => {
     } else {
       setErrorMsg(await res.text())
     }
+  }
+
+  const handleEditor = (editorState) => {
+    handlePostForm('content', editorState)
   }
 
   const handlePostForm = (fieldName, value) => {
@@ -117,7 +117,7 @@ const NewPost = () => {
           </Form.Group>
         </Form.Row>
 
-        <Form.Group controlId="postCOntent">
+        {/* <Form.Group controlId="postCOntent">
           <Form.Label>Post</Form.Label>
           <Form.Control
             as="textarea"
@@ -125,56 +125,20 @@ const NewPost = () => {
             value={postForm.content}
             onChange={e => handlePostForm('content', e.target.value)}
           />
-        </Form.Group>
+        </Form.Group> */}
 
-        <Button variant="info" type="submit">Publicar</Button>
-        <Button variant="secondary" className="ml-3">Salvar rascunho</Button>
+        <Editor
+          editorState={postForm.content}
+          // wrapperClassName="demo-wrapper"
+          editorClassName="editor"
+          onEditorStateChange={e => handlePostForm('content', e)}
+        />
+
+        <div className="mt-3">
+          <Button variant="info" type="submit">Publicar</Button>
+          <Button variant="secondary" className="ml-3">Salvar rascunho</Button>
+        </div>
       </Form>
-        {/* <form onSubmit={handleSubmit}>
-          {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
-          {successMsg ? <p style={{ color: 'green' }}>{successMsg}</p> : null}
-          <label htmlFor="title">
-            <input
-              id="title"
-              name="title"
-              type="text"
-              placeholder="Título"
-            />
-          </label>
-          <label htmlFor="slug">
-            <input
-              id="slug"
-              name="slug"
-              type="text"
-              placeholder="Slug"
-            />
-          </label>
-          <label htmlFor="category">
-            <input
-              id="category"
-              name="category"
-              type="text"
-              placeholder="Categoria"
-            />
-          </label>
-          <label htmlFor="thumb">
-            <input
-              id="thumb"
-              name="thumb"
-              type="text"
-              placeholder="thumb"
-            />
-          </label>
-          <label htmlFor="content">
-            <input
-              id="content"
-              name="content"
-              type="text"
-              placeholder="content"
-            />
-          </label>
-          <button type="submit">Publicar</button>
-        </form> */}
     </div>
   )
 }

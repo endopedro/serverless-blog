@@ -1,6 +1,7 @@
 @import "./common/variables";
 
 @import "~bootstrap/scss/bootstrap";
+@import "~react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 @import "./common/global";
 
@@ -12,6 +13,7 @@
 
 @import "./components/buttons";
 @import "./components/post-card";
+@import "./components/editor";
 
 @import "./admin/admin";
 @import "./admin/sidebar";
