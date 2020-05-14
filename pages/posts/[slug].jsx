@@ -32,26 +32,22 @@ import Header from '@components/layout/header'
       <Header img={post.thumb}/>
       <div className="page">
         <Container>
-          <Row>
-            <Col>
-              <div className="single-post">
-                <div className="post-header">
-                  <h5 className="post-category">#{post.category}</h5>
-                  <div className="post-clicks"><FontAwesomeIcon icon={faEye} className="eye-icon" />{post.clicks}</div>
-                </div>
-                <h2 className="post-title">{post.title}</h2>
-                <div className="post-author">
-                  <span className="info-item"><FontAwesomeIcon icon={faFeatherAlt} /> {author.name}</span>
-                  <span className="info-item"><FontAwesomeIcon icon={faCalendarAlt} /> {getPostDate(post.date)}</span>
-                </div>
-                <div className="post-content" dangerouslySetInnerHTML={{__html: content}}></div>
-                <div className="post-tags"><FontAwesomeIcon icon={faTags} className="tag-icon"/> {post.tags ? post.tags.map( tag => (<div className="post-tag">{tag}</div>)) : ''}</div>
-                <div className="post-footer">
-
-                </div>
-              </div>
-            </Col>
-          </Row>
+          <div className="single-post">
+            <div className="post-header">
+              <h5 className="post-category">#{post.category}</h5>
+              <div className="post-clicks"><FontAwesomeIcon icon={faEye} className="eye-icon" />{post.clicks}</div>
+            </div>
+            <h2 className="post-title">{post.title}</h2>
+            <div className="post-author">
+              <span className="info-item"><FontAwesomeIcon icon={faFeatherAlt} /> {author.name}</span>
+              <span className="info-item"><FontAwesomeIcon icon={faCalendarAlt} /> {getPostDate(post.date)}</span>
+            </div>
+            <div className="post-content" dangerouslySetInnerHTML={{__html: content}}></div>
+            <div className="post-tags">
+              <FontAwesomeIcon icon={faTags} className="tag-icon"/>
+              {post.tags ? post.tags.map( tag => (<div className="post-tag">{tag}</div>)) : ''}
+            </div>
+          </div>
         </Container>
       </div>
     </Layout>

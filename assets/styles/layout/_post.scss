@@ -1,8 +1,17 @@
 .single-post {
   background-color: $white;
-  padding: 3.125rem;
-  margin-top: -100px;
+  padding: 2rem 1.5rem;
+  margin-top: -150px;
   box-shadow: $box-shadow;
+  position: relative;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .post-title {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
 
   .post-header {
     display: flex;
@@ -29,6 +38,7 @@
     margin-top: -0.5rem;
     margin-bottom: 1.5rem;
     color: $info;
+    justify-content: center;
 
     .info-item {
       margin-right: 1rem;
@@ -39,20 +49,24 @@
   .post-tags {
     display: flex;
     align-items: center;
-    margin: 3rem 0;
+    margin-top: 3rem;
+    flex-wrap: wrap;
 
     .tag-icon {
       color: $info;
-      margin-right: 2rem;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
     }
 
     .post-tag {
-      padding: 0.5rem 1rem;
+      padding: 0.25rem 0.5rem;
       background-color: $info;
-      margin-right: 2rem;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
       color: $white;
       transition: 0.3s;
       border-radius: $border-radius-sm;
+      box-shadow: $box-shadow;
 
       &:hover {
         box-shadow: $box-shadow;
@@ -61,8 +75,32 @@
       }
     }
   }
+}
 
-  .post-footer {
+@include media-breakpoint-up(md) {
+  .single-post {
+    padding: 3.125rem;
+    margin-top: -100px;
 
+    .post-title {
+      margin-bottom: 0.5rem;
+      text-align: left;
+    }
+
+    .post-author {
+      justify-content: left;
+    }
+
+    .post-tags {
+      .tag-icon {
+        margin-right: 2rem;
+      }
+
+      .post-tag {
+        padding: 0.5rem 1rem;
+        margin-right: 2rem;
+        box-shadow: none;
+      }
+    }
   }
 }
