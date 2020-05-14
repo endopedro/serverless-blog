@@ -1,0 +1,28 @@
+.loading-page {
+  height: 100vh;
+  background-color: $info;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .spokes {
+    margin: 0 auto;
+  }
+
+  .loading-text {
+    color: $white;
+    margin: 0 auto;
+    margin-top: 2rem;
+    letter-spacing: 1.5rem;
+    padding-left: 2.5rem;
+    font-size: 1rem;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .loading-page {
+    .loading-text {
+      font-size: 3rem;
+    }
+  }
+}

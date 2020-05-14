@@ -4,6 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import Layout from '@components/admin/layout/layout'
 import Sidebar from '@components/admin/layout/sidebar'
 import NewPost from '@components/admin/newPost'
+import LoadingPage from '@components/loadingPage'
 import Login from '@pages/login'
 import { useUser } from '@lib/hooks'
 
@@ -21,8 +22,8 @@ const IndexPage = () => {
 
   const [loading, setLoading] = useState(true)
   const [user, { mutate }] = useUser()
-  const [isLogged, setIsLogged] = useState(false)  
-  const [action, setAction] = useState(actions[1])  
+  const [isLogged, setIsLogged] = useState(false)
+  const [action, setAction] = useState(actions[1])
 
   useEffect(() => {
     if (user) {
@@ -33,7 +34,7 @@ const IndexPage = () => {
     }
   }, [user])
 
-  if (loading) return <h1>LOADING...</h1>
+  if (loading) return <LoadingPage />
   if (!isLogged) return <Login/>
 
   const handleActions = action => {
@@ -43,8 +44,8 @@ const IndexPage = () => {
   return (
     <Layout>
       <div className="admin">
-        <Sidebar 
-          handleActions={handleActions} 
+        <Sidebar
+          handleActions={handleActions}
           actions={actions}
           activeAction={action}
           user={user}
