@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 import Layout from '@components/layout/layout'
 import PostCard from '@components/postCard'
+import Header from '@components/layout/header'
 
 const IndexPage = () => {
   useEffect(() => {
@@ -19,13 +20,14 @@ const IndexPage = () => {
 
   return (
     <Layout>
-      <Container>
-        <Row>
-          {posts.map(post => {
-            return <Col lg={4} className="mb-4"><PostCard post={post}/></Col>
-          })}
-        </Row>
-      </Container>    
+      <Header title={"Serverless Blog"}/>
+      <div className="page">
+        <Container>
+          <Row>
+            {posts.map(post => (<Col lg={4} className="mb-4"><PostCard post={post}/></Col>))}
+          </Row>
+        </Container>
+      </div>
     </Layout>
   )
 }

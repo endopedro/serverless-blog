@@ -30,10 +30,12 @@ const NewPost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    let data = {...postForm}
+    data.content = convertToRaw(postForm.content.getCurrentContent())
     const res = await fetch('/api/posts/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(postForm),
+      body: JSON.stringify(data),
     })
     if (res.status === 201) {
       const postObj = await res.json()
@@ -48,6 +50,7 @@ const NewPost = () => {
   }
 
   const handlePostForm = (fieldName, value) => {
+    console.log(draftToHtml((convertToRaw(postForm.content.getCurrentContent()))))
     setPostForm(prevState => ({
       ...prevState,
       [fieldName]: value

@@ -1,5 +1,18 @@
 .post-card {
   box-shadow: $box-shadow;
+  transition: 0.3s;
+
+  &:hover {
+    cursor: pointer;
+    transform: translateY(-3px);
+    box-shadow: $box-shadow-lg;
+
+    .post-card-body {
+      .post-title {
+        color: $info;
+      }
+    }
+  }
 
   .post-card-header {
     height: 200px;
@@ -34,6 +47,7 @@
       font-weight: $font-weight-bold;
       line-height: 1.75rem;
       text-align: center;
+      transition: 0.3s;
     }
   }
 }
