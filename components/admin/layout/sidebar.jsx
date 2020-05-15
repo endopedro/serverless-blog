@@ -1,7 +1,10 @@
 import React from 'react'
 import { Container, Row, Col, Image } from 'react-bootstrap'
+import { useRouter } from 'next/router'
 
 const Sidebar = (props) => {
+  const router = useRouter()
+
   return (
     <div className="sidebar">
       <div className="sidebar-user">
@@ -12,13 +15,15 @@ const Sidebar = (props) => {
         </div>
       </div>
       <div className="sidebar-section">AÇÕES</div>
-      {props.actions.map((action, index) => (
+      {props.pages.map((page, index) => (
         <div 
-          className={`sidebar-item${action.label == props.activeAction.label ? ' active' : ' lalala'}`}
+          className={`sidebar-item${page == props.activePage ? ' active' : ''}`}
           key={index} 
-          onClick={() => props.handleActions(action)}
-        >
-          {action.label}
+          onClick={() => {
+            router.push(`/admin?page=${page}`, undefined, { shallow: true })
+            props.handlePages(page)
+          }}>
+          <span className="text-capitalize">{page}</span>
         </div>
       ))}
     </div>

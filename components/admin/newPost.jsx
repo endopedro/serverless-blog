@@ -1,17 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useUser } from '@lib/hooks'
 import slugify from 'slugify'
 import { Form, Button, Col } from 'react-bootstrap'
 import dynamic from 'next/dynamic'
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFeatherAlt, faPencilAlt, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
 
 const Editor = dynamic(
   () => import('react-draft-wysiwyg').then(mod => mod.Editor),
   { ssr: false }
 )
 
-const NewPost = () => {
+const NewPost = props => {
   const [user, { mutate }] = useUser()
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
@@ -27,6 +29,25 @@ const NewPost = () => {
     tags: ["carros", "casas", "toalhas"],
     action: "create"
   })
+
+  useEffect(() => {
+    if(props.selectedPost) {
+      setPostForm({
+        ...postForm,
+        author: props.selectedPost.author,
+        category: props.selectedPost.category,
+        clicks: props.selectedPost.clicks,
+        content: EditorState.createWithContent(convertFromRaw((props.selectedPost.content))),
+        date: props.selectedPost.date,
+        slug: props.selectedPost.slug,
+        tags: props.selectedPost.tags,
+        thumb: props.selectedPost.thumb,
+        title: props.selectedPost.title,
+        _id: props.selectedPost._id,
+        action: "edit"
+      })
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -137,9 +158,10 @@ const NewPost = () => {
           onEditorStateChange={e => handlePostForm('content', e)}
         />
 
-        <div className="mt-3">
-          <Button variant="info" type="submit">Publicar</Button>
-          <Button variant="secondary" className="ml-3">Salvar rascunho</Button>
+        <div className="mt-3 d-flex">
+          <Button variant="dark" size={'sm'} onClick={props.goToPosts}><FontAwesomeIcon icon={faArrowCircleLeft} className="mr-2" />Cancelar</Button>
+          <Button variant="secondary" size={'sm'} className="ml-auto mr-3"><FontAwesomeIcon icon={faPencilAlt} className="mr-2"/>Salvar Rascunho</Button>
+          <Button variant="info" size={'sm'} type="submit"><FontAwesomeIcon icon={faFeatherAlt} className="mr-2"/>Publicar</Button>
         </div>
       </Form>
     </div>

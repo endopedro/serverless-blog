@@ -17,4 +17,14 @@
       border-radius: $border-radius-sm;
     }
   }
+
+  .delete-post {
+    color: $danger;
+    transition: 0.2s;
+    margin-bottom: 0;
+
+    &:hover {
+      transform: scale(1.5);
+    }
+  }
 }
