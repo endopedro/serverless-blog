@@ -18,8 +18,6 @@ const NewPost = props => {
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
   const [postForm, setPostForm] = useState({
-    user: user,
-    date: new Date(),
     title: '',
     slug: '',
     category: '',
@@ -34,7 +32,8 @@ const NewPost = props => {
     if(props.selectedPost) {
       setPostForm({
         ...postForm,
-        author: props.selectedPost.author,
+        id: props.selectedPost._id,
+        author_id: props.selectedPost.author._id,
         category: props.selectedPost.category,
         clicks: props.selectedPost.clicks,
         content: EditorState.createWithContent(convertFromRaw((props.selectedPost.content))),
@@ -44,7 +43,7 @@ const NewPost = props => {
         thumb: props.selectedPost.thumb,
         title: props.selectedPost.title,
         _id: props.selectedPost._id,
-        action: "edit"
+        action: "update"
       })
     }
   }, [])
@@ -53,14 +52,15 @@ const NewPost = props => {
     e.preventDefault()
     let data = {...postForm}
     data.content = convertToRaw(postForm.content.getCurrentContent())
-    const res = await fetch('/api/posts/create', {
+    data.user = user
+    const res = await fetch(`/api/posts/${data.action}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
     if (res.status === 201) {
       const postObj = await res.json()
-      setSuccessMsg("Post criado com sucesso.")
+      setSuccessMsg(`Post ${data.action == "create" ? 'criado' : 'editado'} com sucesso.`)
     } else {
       setErrorMsg(await res.text())
     }
