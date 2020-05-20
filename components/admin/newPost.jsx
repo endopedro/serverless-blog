@@ -25,7 +25,7 @@ const NewPost = props => {
     clicks: 0,
     thumb: 'https://abduzeedo.com/sites/default/files/styles/home_cover/public/originals/abdz_infrared_arashiyama_mockup_0.jpg',
     tags: ["carros", "casas", "toalhas"],
-    action: "create"
+    method: 'POST'
   })
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const NewPost = props => {
         thumb: props.selectedPost.thumb,
         title: props.selectedPost.title,
         _id: props.selectedPost._id,
-        action: "update"
+        method: 'PATCH'
       })
     }
   }, [])
@@ -53,8 +53,8 @@ const NewPost = props => {
     let data = {...postForm}
     data.content = convertToRaw(postForm.content.getCurrentContent())
     data.user = user
-    const res = await fetch(`/api/posts/${data.action}`, {
-      method: 'POST',
+    const res = await fetch('/api/posts', {
+      method: data.method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })

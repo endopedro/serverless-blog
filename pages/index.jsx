@@ -19,7 +19,7 @@ const IndexPage = () => {
 
   const getPosts = async () => {
     setLoading(true)
-    const res = await fetch('/api/posts')
+    const res = await fetch('/api/posts', {method: 'GET'})
     const json = await res.json()
     setPosts(json)
     setLoading(false)

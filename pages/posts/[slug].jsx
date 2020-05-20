@@ -56,7 +56,7 @@ import Header from '@components/layout/header'
 
 Post.getInitialProps = async (context) => {
   const { slug } = context.query
-  const res = await fetch(`${process.env.WEB_URI}/api/posts/get?slug=${slug}`)
+  const res = await fetch(`${process.env.WEB_URI}/api/posts?slug=${slug}`,{method: 'GET'})
   const json = await res.json()
   return { post: json.post, author: json.author }
 }

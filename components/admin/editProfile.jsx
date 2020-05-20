@@ -30,13 +30,16 @@ const EditProfile = () => {
     if (isUpdating) return
     setIsUpdating(true)
 
-    // if (profilePictureRef.current.files[0]) {
-    //   formData.append('profilePicture', profilePictureRef.current.files[0])
-    // }
+    let formData = new FormData()
 
-    const res = await fetch('/api/user', {
+    formData.append('name', userData.name)
+    formData.append('bio', userData.bio)
+    if (profilePictureRef.current.files[0]) formData.append('profilePicture', profilePictureRef.current.files[0])
+    if (userData.profilePicture) formData.append('currentProfilePicture', userData.profilePicture)
+    const res = await fetch('/api/users', {
+      // headers: { "Content-Type": "application/json" },
       method: 'PATCH',
-      body: userData,
+      body: formData,
     })
 
     if (res.status === 200) {
@@ -48,46 +51,47 @@ const EditProfile = () => {
         },
       })
       setMsg({ message: 'Profile updated' })
-    } else {
-      setMsg({ message: await res.text(), isError: true })
-    }
-  }
-
-  const handleSubmitPicture = async (event) => {
-    event.preventDefault()
-    if (isUpdating) return
-    setIsUpdating(true)
-
-    let formData = new FormData
-
-    formData.append('user', user)
-    formData.append('currentProfilePicture', userData.profilePicture)
-
-    console.log(profilePictureRef)
-    if (profilePictureRef.current.files[0]) {
-      formData.append('profilePicture', profilePictureRef.current.files[0])
-    }
-
-    const res = await fetch('/api/user/picture', {
-      method: 'PATCH',
-      body: formData,
-    })
-
-    if (res.status === 200) {
-      const newUserData = await res.json()
-      mutate({
-        user: {
-          ...user,
-          profilePicture: newUserData.profilePicture,
-        },
-      })
       setPictureName(null)
-      setMsg({ message: 'Picture updated' })
     } else {
       setMsg({ message: await res.text(), isError: true })
     }
     setIsUpdating(false)
   }
+
+  // const handleSubmitPicture = async (event) => {
+  //   event.preventDefault()
+  //   if (isUpdating) return
+  //   setIsUpdating(true)
+
+  //   let formData = new FormData
+
+  //   formData.append('user', user)
+  //   formData.append('currentProfilePicture', userData.profilePicture)
+
+  //   console.log(profilePictureRef)
+  //   if (profilePictureRef.current.files[0]) {
+  //     formData.append('profilePicture', profilePictureRef.current.files[0])
+  //   }
+
+  //   const res = await fetch('/api/user/picture', {
+  //     method: 'PATCH',
+  //     body: formData,
+  //   })
+
+  //   if (res.status === 200) {
+  //     const newUserData = await res.json()
+  //     mutate({
+  //       user: {
+  //         ...user,
+  //         profilePicture: newUserData.profilePicture,
+  //       },
+  //     })
+  //     setMsg({ message: 'Picture updated' })
+  //   } else {
+  //     setMsg({ message: await res.text(), isError: true })
+  //   }
+  //   setIsUpdating(false)
+  // }
 
   const handleSubmitPasswordChange = async (e) => {
     e.preventDefault()
@@ -147,13 +151,26 @@ const EditProfile = () => {
                 value={userData.bio}
                 onChange={(e) => handleUserData('bio', e.target.value)} />
             </Form.Group>
+            <Form.Group controlId="forGridPicture">
+              <Form.Label>Foto de perfil</Form.Label>
+              <Form.File
+                id="avatar"
+                label={pictureName ? pictureName : "Selecione um arquivo"}
+                data-browse="Selecionar"
+                type="file"
+                accept="image/png, image/jpeg"
+                ref={profilePictureRef}
+                onChange={(e) => setPictureName(e.target.value.split('\\').pop())}
+                custom
+              />
+            </Form.Group>
             <Button variant="info" disabled={isUpdating} size='sm' type="submit">Salvar</Button>
           </Form>
         </div>
         </Col>
       </Row>
       <Row>
-        <Col md='6'>
+        {/* <Col md='6'>
           <div className="admin-content-element">
             <h4 className="mb-4">Foto de perfil</h4>
             <Form onSubmit={handleSubmitPicture}>
@@ -173,7 +190,7 @@ const EditProfile = () => {
               <Button variant="info" disabled={isUpdating || !pictureName} size='sm' type="submit">Salvar</Button>
             </Form>
           </div>
-        </Col>
+        </Col> */}
         <Col md='6'>
           <div className="admin-content-element">
 
