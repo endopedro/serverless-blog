@@ -71,7 +71,7 @@ const NewPost = props => {
   }
 
   const handlePostForm = (fieldName, value) => {
-    console.log(draftToHtml((convertToRaw(postForm.content.getCurrentContent()))))
+    // console.log(draftToHtml((convertToRaw(postForm.content.getCurrentContent()))))
     setPostForm(prevState => ({
       ...prevState,
       [fieldName]: value

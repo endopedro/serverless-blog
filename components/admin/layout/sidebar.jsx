@@ -1,6 +1,8 @@
 import React from 'react'
-import { Container, Row, Col, Image } from 'react-bootstrap'
 import { useRouter } from 'next/router'
+import {Image} from 'cloudinary-react'
+
+const cloudName = process.env.CLOUDINARY_NAME
 
 const Sidebar = (props) => {
   const router = useRouter()
@@ -8,17 +10,17 @@ const Sidebar = (props) => {
   return (
     <div className="sidebar">
       <div className="sidebar-user">
-        <Image className="user-image" src={props.user.profilePicture} />
+        <Image cloudName={cloudName} className="user-image" publicId={props.user.profilePicture} />
         <div className="user-info">
-          <h6 className="user-name">{props.user.name}</h6>  
+          <h6 className="user-name">{props.user.name}</h6>
           <h6 className="user-role">Administrador</h6>
         </div>
       </div>
       <div className="sidebar-section">AÇÕES</div>
       {props.pages.map((page, index) => (
-        <div 
+        <div
           className={`sidebar-item${page == props.activePage ? ' active' : ''}`}
-          key={index} 
+          key={index}
           onClick={() => {
             router.push(`/admin?page=${page}`, undefined, { shallow: true })
             props.handlePages(page)

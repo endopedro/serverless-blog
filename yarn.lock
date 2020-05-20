@@ -2012,6 +2012,19 @@ clone-deep@^4.0.1:
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
 
+cloudinary-core@^2.8.2:
+  version "2.8.2"
+  resolved "https://registry.yarnpkg.com/cloudinary-core/-/cloudinary-core-2.8.2.tgz#355faf986ded19358a65ddc28ad29344c1de0902"
+  integrity sha512-nV1lhEXlqNhgnbnzsDzbrNUAkP8H9J5RuBareRlWyb8tKx/94DvG/kXWrSlC8XNB3uKfiwxOudOnRdjsEnjBgA==
+
+cloudinary-react@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/cloudinary-react/-/cloudinary-react-1.5.0.tgz#8a84e1ba4866f46e419405c6bce62bf52c313464"
+  integrity sha512-Ll1Huv5gJgJtesM7RF1oXQdjtv3J6mKk2dBCIGoDTWNZJOBVAwOgd30640O5hil9Pyr2Whrb9kHuY4T8D2yHtw==
+  dependencies:
+    cloudinary-core "^2.8.2"
+    prop-types "^15.6.2"
+
 cloudinary@^1.21.0:
   version "1.21.0"
   resolved "https://registry.yarnpkg.com/cloudinary/-/cloudinary-1.21.0.tgz#9c30935190f49f2e9a0e26a16cd8ade580f675cc"
@@ -3591,6 +3604,11 @@ jest-worker@24.9.0:
   dependencies:
     merge-stream "^2.0.0"
     supports-color "^6.1.0"
+
+jquery@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.1.tgz#d7b4d08e1bfdb86ad2f1a3d039ea17304717abb5"
+  integrity sha512-XwIBPqcMn57FxfT+Go5pzySnm4KWkT1Tv7gjrpT1srtf8Weynl6R273VJ5GjkRb51IzMp5nbaPjJXMWeju2MKg==
 
 js-base64@^2.1.8:
   version "2.5.2"

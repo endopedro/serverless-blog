@@ -2,6 +2,9 @@ import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useUser } from '@lib/hooks'
+import {Image} from 'cloudinary-react'
+const cloudName = process.env.CLOUDINARY_NAME
+
 
 const ProfilePage = () => {
   const [user] = useUser()
@@ -51,9 +54,7 @@ const ProfilePage = () => {
         <title>{name}</title>
       </Head>
       <div>
-        {profilePicture ? (
-          <img src={profilePicture} width="256" height="256" alt={name} />
-        ) : null}
+        {profilePicture ? <Image cloudName={cloudName} publicId={profilePicture} width="256" height="256" crop="scale" /> : null}
         <section>
           <div>
             <h2>{name}</h2>
