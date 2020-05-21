@@ -35,7 +35,7 @@ import Header from '@components/layout/header'
           <div className="single-post">
             <div className="post-header">
               <h5 className="post-category">#{post.category}</h5>
-              <div className="post-clicks"><FontAwesomeIcon icon={faEye} className="eye-icon" />{post.clicks}</div>
+              <div className="post-clicks"><FontAwesomeIcon icon={faEye} className="eye-icon" />{post.clicks+1}</div>
             </div>
             <h2 className="post-title">{post.title}</h2>
             <div className="post-author">

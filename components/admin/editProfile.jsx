@@ -37,7 +37,6 @@ const EditProfile = () => {
     if (profilePictureRef.current.files[0]) formData.append('profilePicture', profilePictureRef.current.files[0])
     if (userData.profilePicture) formData.append('currentProfilePicture', userData.profilePicture)
     const res = await fetch('/api/users', {
-      // headers: { "Content-Type": "application/json" },
       method: 'PATCH',
       body: formData,
     })
@@ -57,41 +56,6 @@ const EditProfile = () => {
     }
     setIsUpdating(false)
   }
-
-  // const handleSubmitPicture = async (event) => {
-  //   event.preventDefault()
-  //   if (isUpdating) return
-  //   setIsUpdating(true)
-
-  //   let formData = new FormData
-
-  //   formData.append('user', user)
-  //   formData.append('currentProfilePicture', userData.profilePicture)
-
-  //   console.log(profilePictureRef)
-  //   if (profilePictureRef.current.files[0]) {
-  //     formData.append('profilePicture', profilePictureRef.current.files[0])
-  //   }
-
-  //   const res = await fetch('/api/user/picture', {
-  //     method: 'PATCH',
-  //     body: formData,
-  //   })
-
-  //   if (res.status === 200) {
-  //     const newUserData = await res.json()
-  //     mutate({
-  //       user: {
-  //         ...user,
-  //         profilePicture: newUserData.profilePicture,
-  //       },
-  //     })
-  //     setMsg({ message: 'Picture updated' })
-  //   } else {
-  //     setMsg({ message: await res.text(), isError: true })
-  //   }
-  //   setIsUpdating(false)
-  // }
 
   const handleSubmitPasswordChange = async (e) => {
     e.preventDefault()
@@ -129,7 +93,7 @@ const EditProfile = () => {
       </Head>
 
       <Row>
-        <Col>
+        <Col lg='6'>
           <div className="admin-content-element">
           {msg.message ? <p style={{ color: msg.isError ? 'red' : '#0070f3', textAlign: 'center' }}>{msg.message}</p> : null}
 
@@ -168,118 +132,34 @@ const EditProfile = () => {
           </Form>
         </div>
         </Col>
-      </Row>
-      <Row>
-        {/* <Col md='6'>
+        <Col lg='6'>
           <div className="admin-content-element">
-            <h4 className="mb-4">Foto de perfil</h4>
-            <Form onSubmit={handleSubmitPicture}>
-              <Form.Group controlId="forGridPicture">
-                <Form.Label>Foto de perfil</Form.Label>
-                <Form.File
-                  id="avatar"
-                  label={pictureName ? pictureName : "Selecione um arquivo"}
-                  data-browse="Selecionar"
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  ref={profilePictureRef}
-                  onChange={(e) => setPictureName(e.target.value.split('\\').pop())}
-                  custom
+            <h4 className="mb-4">Definir nova senha</h4>
+            <Form onSubmit={handleSubmitPasswordChange}>
+              <Form.Group controlId="formOldPass">
+                <Form.Label>Senha atual</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Senha atual"
+                  name="oldPassword"
+                  id="oldpassword"
                 />
               </Form.Group>
-              <Button variant="info" disabled={isUpdating || !pictureName} size='sm' type="submit">Salvar</Button>
+              <Form.Group controlId="formNewPass">
+                <Form.Label>Nova senha</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Nova senha"
+                  name="newPassword"
+                  id="newpassword"
+                  required
+                />
+              </Form.Group>
+              <Button variant="info" size='sm' type="submit">
+                Salvar
+              </Button>
             </Form>
           </div>
-        </Col> */}
-        <Col md='6'>
-          <div className="admin-content-element">
-
-        {/* <form onSubmit={handleSubmit}>
-          <label htmlFor="name">
-            Name
-            <input
-              required
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-          <label htmlFor="bio">
-            Bio
-            <textarea
-              id="bio"
-              name="bio"
-              type="text"
-              placeholder="Bio"
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-            />
-          </label>
-          <label htmlFor="avatar">
-            Profile picture
-            <input
-              type="file"
-              id="avatar"
-              name="avatar"
-              accept="image/png, image/jpeg"
-              ref={userData.profilePictureRef}
-            />
-          </label>
-          <button disabled={isUpdating} type="submit">Save</button> */}
-        {/* </form> */}
-
-
-
-        <h4 className="mb-4">Definir nova senha</h4>
-        <Form onSubmit={handleSubmitPasswordChange}>
-          <Form.Group controlId="formOldPass">
-            <Form.Label>Senha atual</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Senha atual"
-              name="oldPassword"
-              id="oldpassword"
-            />
-          </Form.Group>
-          <Form.Group controlId="formNewPass">
-            <Form.Label>Nova senha</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Nova senha"
-              name="newPassword"
-              id="newpassword"
-              required
-            />
-          </Form.Group>
-          <Button variant="info" size='sm' type="submit">
-            Salvar
-          </Button>
-        </Form>
-        {/* <form onSubmit={handleSubmitPasswordChange}>
-          <label htmlFor="oldpassword">
-            Old Password
-            <input
-              type="password"
-              name="oldPassword"
-              id="oldpassword"
-              required
-            />
-          </label>
-          <label htmlFor="newpassword">
-            New Password
-            <input
-              type="password"
-              name="newPassword"
-              id="newpassword"
-              required
-            />
-          </label>
-          <button type="submit">Change Password</button>
-        </form> */}
-      </div>
         </Col>
       </Row>
     </>

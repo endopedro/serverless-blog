@@ -1,11 +1,28 @@
 import nextConnect from 'next-connect'
-import database from '@middlewares/database'
+// import database from '@middlewares/database'
+import middleware from '@middlewares/middleware'
 import { extractPosts, extractUser2 } from '@lib/api-helpers'
 import mongodb from 'mongodb'
+import multer from 'multer'
+import { v2 as cloudinary } from 'cloudinary'
+
+const upload = multer({ dest: '/tmp' })
 
 const handler = nextConnect()
 
-handler.use(database)
+const {
+  hostname: cloud_name,
+  username: api_key,
+  password: api_secret,
+} = new URL(process.env.CLOUDINARY_URL)
+
+cloudinary.config({
+  cloud_name,
+  api_key,
+  api_secret,
+})
+
+handler.use(middleware)
 
 handler.get(async (req, res) => {
   if(req.query.slug) {
@@ -30,28 +47,22 @@ handler.get(async (req, res) => {
   }
 })
 
-handler.post(async (req, res) => {
-  const {
-    user,
-    title,
-    slug,
-    category,
-    content,
-    clicks,
-    thumb,
-    tags,
-  } = req.body
-
-  const user_id = user._id
-  const author = await req.db.collection('users').findOne({ _id: user_id })
-
-  if (!user && author.length > 0) {
+handler.post(upload.single('thumb'), async (req, res) => {
+  if (!req.user) {
     res.status(403).send('Not logged.')
     return
   }
 
+  const {
+    title,
+    slug,
+    category,
+    content,
+    tags,
+  } = req.body
+
   if (!slug) {
-    res.status(400).send('Slug is missing.')
+    res.status(403).send('Slug is missing.')
     return
   }
 
@@ -60,75 +71,88 @@ handler.post(async (req, res) => {
     return
   }
 
+  let thumb
+
+  if (req.file) {
+    const image = await cloudinary.uploader.upload(req.file.path)
+    thumb = image.public_id
+  }
+
   const post = await req.db
     .collection('posts')
     .insertOne({
-      author_id: mongodb.ObjectId(user_id),
+      author_id: mongodb.ObjectId(req.user._id),
       date: new Date(),
       title,
       slug,
       category,
-      content,
-      clicks,
-      thumb,
-      tags
+      content: JSON.parse(content),
+      clicks: 0,
+      thumb: thumb ? thumb : null,
+      tags: JSON.parse(tags),
     })
     .then(({ ops }) => ops[0])
 
   res.status(201).json(post)
 })
 
-handler.patch(async (req, res) => {
-  const {
-    id,
-    user,
-    title,
-    slug,
-    category,
-    content,
-    clicks,
-    thumb,
-    tags
-  } = req.body
-
-  if (!user) {
+handler.patch(upload.single('thumb'),async (req, res) => {
+  if (!req.user) {
     res.status(403).send('Not logged.')
     return
   }
 
+  const {
+    _id,
+    title,
+    currentThumb,
+    slug,
+    category,
+    content,
+    tags,
+  } = req.body
+
   if (!slug) {
-    res.status(400).send('Slug is missing.')
+    res.status(403).send('Slug is missing.')
     return
   }
 
-  const oldPost = await req.db.collection('posts').findOne({ _id: mongodb.ObjectId(id) })
+  const currentPost = await req.db.collection('posts').findOne({ _id: mongodb.ObjectId(_id) })
 
-  if (oldPost.slug != slug && (await req.db.collection('posts').countDocuments({ slug })) > 0) {
+  if ((currentPost.slug != slug) && (await req.db.collection('posts').countDocuments({ slug })) > 0) {
     res.status(403).send('The slug has already been used.')
     return
   }
 
-  const post = await req.db
-    .collection('posts')
-    .updateOne(
-      {
-       "_id": mongodb.ObjectId(id)
+  let thumb
+
+  if (req.file) {
+    const image = await cloudinary.uploader.upload(req.file.path)
+    thumb = image.public_id
+  }
+
+  const post = await req.db.collection('posts').updateOne(
+    { _id: mongodb.ObjectId(_id) },
+    {
+      $set: {
+        author_id: mongodb.ObjectId(req.user._id),
+        ...(title && { title }),
+        ...(slug && { slug }),
+        ...(category && { category }),
+        content: JSON.parse(content),
+        ...(thumb && { thumb }),
+        tags: JSON.parse(tags),
       },
-      {
-        $set: {
-          updated: new Date(),
-          title,
-          slug,
-          category,
-          content,
-          clicks,
-          thumb,
-          tags
-        }
-      }
-    )
+    },
+  ).then(cloudinary.uploader.destroy(currentThumb))
 
   res.status(201).json(post)
 })
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
 
 export default handler

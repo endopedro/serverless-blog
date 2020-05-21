@@ -11,19 +11,21 @@ import { faFeatherAlt, faPencilAlt, faArrowCircleLeft } from '@fortawesome/free-
 const Editor = dynamic(
   () => import('react-draft-wysiwyg').then(mod => mod.Editor),
   { ssr: false }
-)
+  )
 
-const NewPost = props => {
+  const NewPost = props => {
+  const postThumbRef = React.createRef()
   const [user, { mutate }] = useUser()
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
+  const [thumbName, setThumbName] = useState(null)
   const [postForm, setPostForm] = useState({
     title: '',
     slug: '',
+    _id: '',
     category: '',
     content: EditorState.createEmpty(),
-    clicks: 0,
-    thumb: 'https://abduzeedo.com/sites/default/files/styles/home_cover/public/originals/abdz_infrared_arashiyama_mockup_0.jpg',
+    thumb: '',
     tags: ["carros", "casas", "toalhas"],
     method: 'POST'
   })
@@ -32,12 +34,8 @@ const NewPost = props => {
     if(props.selectedPost) {
       setPostForm({
         ...postForm,
-        id: props.selectedPost._id,
-        author_id: props.selectedPost.author._id,
         category: props.selectedPost.category,
-        clicks: props.selectedPost.clicks,
         content: EditorState.createWithContent(convertFromRaw((props.selectedPost.content))),
-        date: props.selectedPost.date,
         slug: props.selectedPost.slug,
         tags: props.selectedPost.tags,
         thumb: props.selectedPost.thumb,
@@ -50,17 +48,26 @@ const NewPost = props => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    let data = {...postForm}
-    data.content = convertToRaw(postForm.content.getCurrentContent())
-    data.user = user
+    let formData = new FormData()
+    formData.append('title', postForm.title)
+    formData.append('slug', postForm.slug)
+    formData.append('_id', postForm._id)
+    formData.append('category', postForm.category)
+    formData.append('currentThumb', postForm.thumb)
+    formData.append('tags', JSON.stringify(postForm.tags))
+    formData.append('content', JSON.stringify(convertToRaw(postForm.content.getCurrentContent())))
+    if (postThumbRef.current.files[0]) formData.append('thumb', postThumbRef.current.files[0])
+
+    // formData.user = user
     const res = await fetch('/api/posts', {
-      method: data.method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      method: postForm.method,
+      // headers: { 'Content-Type': 'application/json' },
+      // body: JSON.stringify(formData),
+      body: formData,
     })
     if (res.status === 201) {
       const postObj = await res.json()
-      setSuccessMsg(`Post ${data.action == "create" ? 'criado' : 'editado'} com sucesso.`)
+      setSuccessMsg(`Post ${postForm.method == "POST" ? 'criado' : 'editado'} com sucesso.`)
     } else {
       setErrorMsg(await res.text())
     }
@@ -105,15 +112,6 @@ const NewPost = props => {
           />
         </Form.Group>
         <p>Slug: <span className="text-primary">{postForm.slug ? '/'+postForm.slug : ''}</span></p>
-        {/* <Form.Group controlId="postSlug">
-          <Form.Label>Slug</Form.Label>
-          <Form.Control
-            placeholder="Slug do post"
-            onChange={e => handlePostForm('slug', slugify(e.target.value))}
-            value={postForm.slug}
-            size="sm"
-          />
-        </Form.Group> */}
 
         <Form.Row>
           <Form.Group as={Col} controlId="postCategory">
@@ -134,26 +132,18 @@ const NewPost = props => {
             <Form.Label>Thumbnail</Form.Label>
             <Form.File
               id="postThumb"
-              label="Escolha uma imagem"
-              data-browse="Upload"
+              label={thumbName ? thumbName : "Selecione um arquivo"}
+              accept="image/png, image/jpeg"
+              type="file"
+              ref={postThumbRef}
+              onChange={(e) => setThumbName(e.target.value.split('\\').pop())}
               custom
             />
           </Form.Group>
         </Form.Row>
 
-        {/* <Form.Group controlId="postCOntent">
-          <Form.Label>Post</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows="10"
-            value={postForm.content}
-            onChange={e => handlePostForm('content', e.target.value)}
-          />
-        </Form.Group> */}
-
         <Editor
           editorState={postForm.content}
-          // wrapperClassName="demo-wrapper"
           editorClassName="editor"
           onEditorStateChange={e => handlePostForm('content', e)}
         />
