@@ -26,6 +26,7 @@ const AllPosts = (props) => {
   const [loadingPosts, setLoadingPosts] = useState(true)
 
   const getPosts = async () => {
+    setLoadingPosts(true)
     const res = await fetch('/api/posts')
     const json = await res.json()
     setPosts(json)
@@ -42,8 +43,16 @@ const AllPosts = (props) => {
     setAction(null)
   }
 
-  const deletePost = (id) => {
-    console.log("deletando", id)
+  const deletePost = async (id) => {
+    const post = getPostFromId(id)
+    console.log("deletando: ", post.title)
+    const res = await fetch(`/api/posts?_id=${post._id}&thumb=${post.thumb}`, {method: 'DELETE'})
+    if (res.status === 201) {
+      console.log(`Post ${post.title} deletado com sucesso!`)
+      getPosts()
+    } else {
+      console.log("erro: " + await res.text())
+    }
   }
 
   const columns = [
@@ -82,13 +91,13 @@ const AllPosts = (props) => {
   if(action == 'new') {
     props.setTitle('Novo Post')
     return <NewPost goToPosts={goToPosts} />
-  } 
+  }
 
   return (
     <div className="admin-content-element">
-      <Button 
-        variant="info" 
-        size="sm" 
+      <Button
+        variant="info"
+        size="sm"
         className="mb-3"
         onClick={() => setAction('new')}
       >

@@ -149,6 +149,21 @@ handler.patch(upload.single('thumb'),async (req, res) => {
   res.status(201).json(post)
 })
 
+handler.delete(async (req, res) => {
+  if (!req.user) {
+    res.status(403).send('Not logged.')
+    return
+  }
+
+  const {_id, thumb} = req.query
+
+  const post = await req.db.collection('posts').deleteOne(
+    { _id: mongodb.ObjectId(_id) }
+  ).then(cloudinary.uploader.destroy(thumb))
+
+  res.status(201).json(post)
+})
+
 export const config = {
   api: {
     bodyParser: false,
