@@ -35,11 +35,12 @@ const IndexPage = () => {
       <div className="page">
         <Container>
           <Row>
-            {posts.map(post => (
-              <Col lg={4} className="mb-4">
+            {posts.map((post, index) => (
+              <Col lg={4} className="mb-4" key={index}>
                 <PostCard
                   onClick={()=>goToPost(post.slug)}
-                  post={post}/>
+                  post={post}
+                />
               </Col>))}
             {loading ? <ReactLoading type="spin" color="#0D7EA6" className="my-5 mx-auto" /> : ''}
           </Row>
