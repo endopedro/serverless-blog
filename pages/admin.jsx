@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 import Layout from '@components/admin/layout/layout'
 import Sidebar from '@components/admin/layout/sidebar'
-import NewPost from '@components/admin/newPost'
+import Editors from '@components/admin/editors'
 import AllPosts from '@components/admin/allPosts'
 import EditProfile from '@components/admin/editProfile'
 import LoadingPage from '@components/loadingPage'
@@ -11,7 +11,7 @@ import Login from '@pages/login'
 import { useUser } from '@lib/hooks'
 
 const IndexPage = ({ page, action }) => {
-  const pages = ['dashboard', 'posts', 'editProfile']
+  const pages = ['dashboard', 'posts', 'editProfile', 'editors']
 
   const [loading, setLoading] = useState(true)
   const [user, { mutate }] = useUser()
@@ -39,7 +39,8 @@ const IndexPage = ({ page, action }) => {
   const content = {
     dashboard: <h1>conteudo</h1>,
     posts: <AllPosts action={action} setTitle={setTitle}/>,
-    editProfile: <EditProfile />
+    editProfile: <EditProfile />,
+    editors: <Editors />
   }
 
   return (

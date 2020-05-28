@@ -79,7 +79,7 @@ const AllPosts = (props) => {
     {
       name: 'Excluir',
       ignoreRowClick: true,
-      cell: row => <h5 className="delete-post" onClick={()=>deletePost(row._id)}><FontAwesomeIcon icon={faTimesCircle} /></h5>,
+      cell: row => <h5 className="delete-element" onClick={()=>deletePost(row._id)}><FontAwesomeIcon icon={faTimesCircle} /></h5>,
     }
   ];
 
