@@ -11,9 +11,9 @@ import { faFeatherAlt, faPencilAlt, faArrowCircleLeft } from '@fortawesome/free-
 const Editor = dynamic(
   () => import('react-draft-wysiwyg').then(mod => mod.Editor),
   { ssr: false }
-  )
+)
 
-  const NewPost = props => {
+const NewPost = props => {
   const postThumbRef = React.createRef()
   const [user, { mutate }] = useUser()
   const [errorMsg, setErrorMsg] = useState('')

@@ -13,7 +13,7 @@ const Users = (props) => {
     getUsers()
   }, [])
 
-  // const actions = ['new', 'edit']
+  const actions = ['new', 'edit']
 
   const getUserFromId = id => {
     return users.find(user => user._id == id)
@@ -21,7 +21,7 @@ const Users = (props) => {
 
   // const router = useRouter()
   const [users, setUsers] = useState([])
-  // const [action, setAction] = useState(actions.includes(props.action) ? props.action : null)
+  const [action, setAction] = useState(actions.includes(props.action) ? props.action : null)
   // const [selectedPost, setSelectedPost] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -86,15 +86,15 @@ const Users = (props) => {
 
   return (
     <div className="admin-content-element">
-      {/* <Button
+      <Button
         variant="info"
         size="sm"
         className="mb-3"
         onClick={() => setAction('new')}
       >
         <FontAwesomeIcon icon={faPlusCircle} className="mr-2"/>
-        Novo Post
-      </Button> */}
+        Adicionar editor
+      </Button>
 
        <DataTable
         title="Todos os Usuários"
