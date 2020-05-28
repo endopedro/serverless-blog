@@ -1,7 +1,11 @@
 import React from 'react'
-import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap'
+import { Navbar, Nav, Form, FormControl, Button, Dropdown, DropdownButton } from 'react-bootstrap'
 import Link from 'next/link'
 import { useUser } from '@lib/hooks'
+// import { Image } from 'cloudinary-react'
+// const cloudName = process.env.CLOUDINARY_NAME
+
+import MenuDropDown from '@components/layout/menuDropDown'
 
 const MainNav = () => {
   const [user, { mutate }] = useUser()
@@ -24,24 +28,20 @@ const MainNav = () => {
           <Nav.Link>Sobre</Nav.Link>
           <Nav.Link>Arquivo</Nav.Link>
         </Nav>
-        <div className="ml-auto main-nav-login">
-          {/* <Nav.Link>Hello, {user ? user.name : 'stranger'}</Nav.Link> */}
-          {!user ? (
-            <>
-              <Link href="/login" passHref><Nav.Link>Login</Nav.Link></Link>
-              {/* <Link href="/signup" passHref><Nav.Link>Cadastrar</Nav.Link></Link> */}
-            </>
-          ) : (
-            <>
-              <Link href="/profile" passHref><Nav.Link>Perfil</Nav.Link></Link>
-              <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
-            </>
-          )}
-        </div>
         <Form inline>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Button variant="outline-success">Search</Button>
+          <FormControl type="text" placeholder="Pesquisar" className="mr-sm-2" />
         </Form>
+        {user && (
+          <>
+            <MenuDropDown handleLogout={handleLogout} user={user}/>
+            <Nav className="mr-auto d-md-none">
+              <div class="dropdown-divider" role="separator"></div>
+              <Link href="/admin" passHref><Nav.Link className="text-info">Administração</Nav.Link></Link>
+              <Link href="/profile" passHref><Nav.Link className="text-info">Perfil</Nav.Link></Link>
+              <Nav.Link onClick={handleLogout} className="text-danger">Sair</Nav.Link>
+            </Nav>
+          </>
+        )}
       </Navbar.Collapse>
     </Navbar>
   )

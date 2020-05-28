@@ -5110,6 +5110,11 @@ react-bootstrap@^1.0.0:
     uncontrollable "^7.0.0"
     warning "^4.0.3"
 
+react-clickout-handler@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-clickout-handler/-/react-clickout-handler-1.2.1.tgz#f2bc3f5a7b01d50e2875702a026c5c517e54027b"
+  integrity sha1-8rw/WnsB1Q4odXAqAmxcUX5UAns=
+
 react-data-table-component@^6.9.1:
   version "6.9.1"
   resolved "https://registry.yarnpkg.com/react-data-table-component/-/react-data-table-component-6.9.1.tgz#7ea152cff98af1e9bdfc4a9366af9fb4fddd55b8"
