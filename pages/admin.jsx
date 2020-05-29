@@ -40,7 +40,7 @@ const IndexPage = ({ page, action }) => {
     dashboard: <h1>conteudo</h1>,
     posts: <AllPosts action={action} setTitle={setTitle}/>,
     editProfile: <EditProfile />,
-    editors: <Editors />
+    editors: <Editors setTitle={setTitle}/>
   }
 
   return (

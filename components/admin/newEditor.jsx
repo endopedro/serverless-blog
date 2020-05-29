@@ -2,30 +2,42 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Router from 'next/router'
 import { useUser } from '@lib/hooks'
+import { Form, Button, Col } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUserCheck, faPencilAlt, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
 
 const newEditor = () => {
-  // const [user, { mutate }] = useUser()
-  // const [errorMsg, setErrorMsg] = useState('')
-  // useEffect(() => {
-  //   // redirect to home if user is authenticated
-  //   if (user) Router.replace('/')
-  // }, [user])
+  const [errorMsg, setErrorMsg] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
+  const [editorForm, setEditorForm] = useState({
+    name: '',
+    email: ''
+  })
+
+  const handleEditorForm = (fieldName, value) => {
+    setEditorForm(prevState => ({
+      ...prevState,
+      [fieldName]: value
+    }))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const body = {
-      email: e.currentTarget.email.value,
-      name: e.currentTarget.name.value,
-      password: e.currentTarget.password.value,
-    }
-    const res = await fetch('/api/users', {
+    // let formData = new FormData()
+    // formData.append("name", editorForm.name)
+    // formData.append("email", editorForm.email)
+    // for (var key of formData.entries()) {
+    //   console.log(key[0] + ', ' + key[1]);
+    // }
+    const res = await fetch('/api/users?editor=true', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body: JSON.stringify(editorForm),
     })
     if (res.status === 201) {
       const userObj = await res.json()
-      mutate(userObj)
+      console.log(userObj)
+      setSuccessMsg(userObj.name+' cadastrado com sucesso')
     } else {
       setErrorMsg(await res.text())
     }
@@ -36,36 +48,31 @@ const newEditor = () => {
       <Head>
         <title>Cadastrar editor</title>
       </Head>
-      <div>
-        <h2>Sign up</h2>
-        <form onSubmit={handleSubmit}>
+      <div className="admin-content-element">
+        <Form onSubmit={handleSubmit}>
           {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
-          <label htmlFor="name">
-            <input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Your name"
+          {successMsg ? <p style={{ color: 'green' }}>{successMsg}</p> : null}
+
+          <Form.Group controlId="editorName">
+            <Form.Label>Nome</Form.Label>
+            <Form.Control
+              placeholder="Digite o nome"
+              onChange={e => {handleEditorForm('name', e.target.value)}}
+              value={editorForm.name}
             />
-          </label>
-          <label htmlFor="email">
-            <input
-              id="email"
-              name="email"
+          </Form.Group>
+
+          <Form.Group controlId="editorEmail">
+            <Form.Label>E-mail</Form.Label>
+            <Form.Control
+              placeholder="Digite o e-mail"
+              onChange={e => {handleEditorForm('email', e.target.value)}}
+              value={editorForm.email}
               type="email"
-              placeholder="Email address"
             />
-          </label>
-          <label htmlFor="password">
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Create a password"
-            />
-          </label>
-          <button type="submit">Sign up</button>
-        </form>
+          </Form.Group>
+          <Button variant="info" size={'sm'} type="submit"><FontAwesomeIcon icon={faUserCheck} className="mr-2"/>Cadastrar</Button>
+        </Form>
       </div>
     </>
   )

@@ -37,7 +37,7 @@ handler.get(async (req, res) => {
 
 handler.patch(upload.single('profilePicture'), async (req, res) => {
   if (!req.user) {
-    req.status(401).end()
+    res.status(401).end()
     return
   }
 
@@ -70,6 +70,16 @@ handler.patch(upload.single('profilePicture'), async (req, res) => {
 })
 
 handler.post(async (req, res) => {
+  if (req.query.editor) {
+    if (!req.user || !req.user.role=='admin') {
+      res.status(401).end()
+      return
+    }
+
+    console.log(req.body)
+    res.status(400).send('lacraia.')
+  }
+
   const { name, password } = req.body
   const email = normalizeEmail(req.body.email)
   if (!isEmail(email)) {

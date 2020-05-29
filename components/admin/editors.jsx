@@ -6,7 +6,7 @@ import { faPlusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router'
 import ReactLoading from 'react-loading'
 
-import NewPost from '@components/admin/newPost'
+import NewEditor from '@components/admin/newEditor'
 
 const Users = (props) => {
   useEffect(() => {
@@ -39,10 +39,10 @@ const Users = (props) => {
   //   setSelectedPost(getPostFromId(id))
   // }
 
-  // const goToPosts = () => {
-  //   props.setTitle('Posts')
-  //   setAction(null)
-  // }
+  const goToEditors = () => {
+    props.setTitle('Editores')
+    setAction(null)
+  }
 
   const deleteUser = async (id) => {
     // const post = getPostFromId(id)
@@ -79,10 +79,10 @@ const Users = (props) => {
   //   return <NewPost goToPosts={goToPosts} selectedPost={selectedPost} />
   // }
 
-  // if(action == 'new') {
-  //   props.setTitle('Novo Post')
-  //   return <NewPost goToPosts={goToPosts} />
-  // }
+  if(action == 'new') {
+    props.setTitle('Cadastrar editor')
+    return <NewEditor goToEditors={goToEditors} />
+  }
 
   return (
     <div className="admin-content-element">
@@ -97,7 +97,7 @@ const Users = (props) => {
       </Button>
 
        <DataTable
-        title="Todos os Usuários"
+        title="Todos os editores"
         // noTableHead={true}
         columns={columns}
         data={users}
