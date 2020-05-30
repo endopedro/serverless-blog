@@ -11,7 +11,8 @@ const newEditor = () => {
   const [successMsg, setSuccessMsg] = useState('')
   const [editorForm, setEditorForm] = useState({
     name: '',
-    email: ''
+    email: '',
+    password: ''
   })
 
   const handleEditorForm = (fieldName, value) => {
@@ -23,12 +24,6 @@ const newEditor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // let formData = new FormData()
-    // formData.append("name", editorForm.name)
-    // formData.append("email", editorForm.email)
-    // for (var key of formData.entries()) {
-    //   console.log(key[0] + ', ' + key[1]);
-    // }
     const res = await fetch('/api/users?editor=true', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -71,6 +66,17 @@ const newEditor = () => {
               type="email"
             />
           </Form.Group>
+
+          <Form.Group controlId="editorPassword">
+            <Form.Label>Senha</Form.Label>
+            <Form.Control 
+              type="password" 
+              placeholder="Digite a senha" 
+              value={editorForm.password}
+              onChange={e => {handleEditorForm('password', e.target.value)}}
+            />
+          </Form.Group>
+
           <Button variant="info" size={'sm'} type="submit"><FontAwesomeIcon icon={faUserCheck} className="mr-2"/>Cadastrar</Button>
         </Form>
       </div>

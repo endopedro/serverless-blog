@@ -19,7 +19,7 @@ const MenuDropDown = (props) => {
         <div className="picture" onClick={()=>setShowDropDown(!showDropDown)} >
           <Image 
             cloudName={cloudName} 
-            publicId={props.user.profilePicture} 
+            publicId={props.user.profilePicture ? props.user.profilePicture : `${process.env.WEB_URI}/no-pic.jpg`} 
             className="user-image" 
             />
         </div>

@@ -36,7 +36,7 @@ const EditProfile = () => {
     formData.append('bio', userData.bio)
     if (profilePictureRef.current.files[0]) formData.append('profilePicture', profilePictureRef.current.files[0])
     if (userData.profilePicture) formData.append('currentProfilePicture', userData.profilePicture)
-    const res = await fetch('/api/users', {
+    const res = await fetch('/api/users-settings', {
       method: 'PATCH',
       body: formData,
     })

@@ -11,18 +11,20 @@ import Login from '@pages/login'
 import { useUser } from '@lib/hooks'
 
 const IndexPage = ({ page, action }) => {
-  const pages = ['dashboard', 'posts', 'editProfile', 'editors']
+  const initialPages = ['dashboard', 'posts', 'editProfile']
 
+  const [pages, setPages] = useState(initialPages)
   const [loading, setLoading] = useState(true)
   const [user, { mutate }] = useUser()
   const [isLogged, setIsLogged] = useState(false)
-  const [activePage, setActivePage] = useState(pages.includes(page) ? page : 'dashboard')
+  const [activePage, setActivePage] = useState(initialPages.includes(page) ? page : 'dashboard')
   const [title, setTitle] = useState('Dashboard')
 
   useEffect(() => {
     if (user) {
       setIsLogged(true)
       setLoading(false)
+      if (user.role == 'admin') setPages([...pages, 'editors'])
     } else if (user === null) {
       setLoading(false)
     }
