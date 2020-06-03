@@ -29,7 +29,6 @@ const Users = (props) => {
     setLoading(true)
     const res = await fetch('/api/users?all=true')
     const json = await res.json()
-    console.log('USERS',json)
     setUsers(json.users)
     setLoading(false)
   }
@@ -45,15 +44,19 @@ const Users = (props) => {
   }
 
   const deleteUser = async (id) => {
-    // const post = getPostFromId(id)
+    const user = getUserFromId(id)
     console.log("deletando: ", user.name)
-    // const res = await fetch(`/api/posts?_id=${post._id}&thumb=${post.thumb}`, {method: 'DELETE'})
-    // if (res.status === 201) {
-    //   console.log(`Post ${post.title} deletado com sucesso!`)
-    //   getPosts()
-    // } else {
-    //   console.log("erro: " + await res.text())
-    // }
+    const res = await fetch(`/api/users`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({editor: user}),
+    })
+    if (res.status === 201) {
+      console.log(`Editor ${user.name} deletado com sucesso!`)
+      getUsers()
+    } else {
+      console.log("erro: " + await res.text())
+    }
   }
 
   const columns = [

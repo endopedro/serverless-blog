@@ -4,24 +4,25 @@ import normalizeEmail from 'validator/lib/normalizeEmail'
 import bcrypt from 'bcryptjs'
 import middleware from '@middlewares/middleware'
 import { extractUser } from '@lib/api-helpers'
+import mongodb from 'mongodb'
 // import multer from 'multer'
-// import { v2 as cloudinary } from 'cloudinary'
+import { v2 as cloudinary } from 'cloudinary'
 
 // const upload = multer({ dest: '/tmp' })
 
 const handler = nextConnect()
 
-// const {
-//   hostname: cloud_name,
-//   username: api_key,
-//   password: api_secret,
-// } = new URL(process.env.CLOUDINARY_URL)
+const {
+  hostname: cloud_name,
+  username: api_key,
+  password: api_secret,
+} = new URL(process.env.CLOUDINARY_URL)
 
-// cloudinary.config({
-//   cloud_name,
-//   api_key,
-//   api_secret,
-// })
+cloudinary.config({
+  cloud_name,
+  api_key,
+  api_secret,
+})
 
 handler.use(middleware)
 
@@ -99,6 +100,32 @@ handler.post(async (req, res) => {
   } else {
     res.status(201).json(extractUser(user))
   }
+})
+
+handler.delete(async (req, res) => {
+  if (!req.user || req.user.role!='admin') {
+    res.status(401).end()
+    return
+  }
+
+  const { editor } = req.body
+
+  const user = await req.db
+    .collection('users')
+    .deleteOne({ _id: mongodb.ObjectId(editor._id) })
+  
+  if (user) {
+    cloudinary.uploader.destroy(editor.profilePicture)
+    req.db.collection('posts').update(
+      { author_id: mongodb.ObjectId(editor._id) },
+      {
+        $set: {
+          author_id: mongodb.ObjectId(req.user._id),
+        }
+      }
+    )
+  }
+  res.status(201).json(extractUser(user))
 })
 
 // export const config = {

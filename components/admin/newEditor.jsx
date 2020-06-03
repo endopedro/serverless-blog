@@ -31,7 +31,6 @@ const newEditor = () => {
     })
     if (res.status === 201) {
       const userObj = await res.json()
-      console.log(userObj)
       setSuccessMsg(userObj.name+' cadastrado com sucesso')
     } else {
       setErrorMsg(await res.text())

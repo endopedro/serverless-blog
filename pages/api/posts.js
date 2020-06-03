@@ -34,13 +34,13 @@ handler.get(async (req, res) => {
   } else {
     const posts = await req.db.collection('posts').aggregate([
       {
-         $lookup:
-            {
-               from: "users",
-               localField: "author_id",
-               foreignField: "_id",
-               as: "author"
-           }
+        $lookup:
+          {
+              from: "users",
+              localField: "author_id",
+              foreignField: "_id",
+              as: "author"
+          }
       }
     ]).toArray()
     res.json(extractPosts(posts))
