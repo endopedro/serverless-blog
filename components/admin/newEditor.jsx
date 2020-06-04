@@ -6,14 +6,25 @@ import { Form, Button, Col } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faPencilAlt, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
 
-const newEditor = () => {
+const newEditor = props => {
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
   const [editorForm, setEditorForm] = useState({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    method: 'POST'
   })
+
+  useEffect(() => {
+    if(props.selectedEditor) {
+      setEditorForm({
+        ...editorForm,
+        _id: props.selectedEditor._id,
+        method: 'PATCH'
+      })
+    }
+  }, [])
 
   const handleEditorForm = (fieldName, value) => {
     setEditorForm(prevState => ({
@@ -25,7 +36,7 @@ const newEditor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     const res = await fetch('/api/users?editor=true', {
-      method: 'POST',
+      method: editorForm.method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(editorForm),
     })
@@ -40,7 +51,7 @@ const newEditor = () => {
   return (
     <>
       <Head>
-        <title>Cadastrar editor</title>
+        <title>{editorForm=='post' ? 'Cadastrar ' : 'Editar '}editor</title>
       </Head>
       <div className="admin-content-element">
         <Form onSubmit={handleSubmit}>

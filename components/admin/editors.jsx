@@ -22,21 +22,21 @@ const Users = (props) => {
   // const router = useRouter()
   const [users, setUsers] = useState([])
   const [action, setAction] = useState(actions.includes(props.action) ? props.action : null)
-  // const [selectedPost, setSelectedPost] = useState(null)
+  const [selectedUser, setSelectedUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const getUsers = async () => {
     setLoading(true)
     const res = await fetch('/api/users?all=true')
     const json = await res.json()
-    setUsers(json.users)
+    setUsers(json.users.filter(user => (user.role!='admin')))
     setLoading(false)
   }
 
-  // const editPost = id => {
-  //   setAction('edit')
-  //   setSelectedPost(getPostFromId(id))
-  // }
+  const editUser = id => {
+    setAction('edit')
+    setSelectedUser(getUserFromId(id))
+  }
 
   const goToEditors = () => {
     props.setTitle('Editores')
@@ -77,10 +77,10 @@ const Users = (props) => {
     }
   ];
 
-  // if(action == 'edit' && selectedPost) {
-  //   props.setTitle('Editar Post')
-  //   return <NewPost goToPosts={goToPosts} selectedPost={selectedPost} />
-  // }
+  if(action == 'edit' && selectedUser) {
+    props.setTitle('Editar Editor')
+    return <NewEditor goToEditors={goToEditors} selectedEditor={selectedUser} />
+  }
 
   if(action == 'new') {
     props.setTitle('Cadastrar editor')
@@ -111,7 +111,7 @@ const Users = (props) => {
         dense={true}
         progressPending={loading}
         progressComponent={<ReactLoading type="spin" color="#0D7EA6" className="my-5"/>}
-        onRowClicked={row => editPost(row._id)}
+        onRowClicked={row => editUser(row._id)}
       />
     </div>
   )

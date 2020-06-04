@@ -36,39 +36,43 @@ handler.get(async (req, res) => {
   return res.json({ user: extractUser(req.user) })
 })
 
-// handler.patch(upload.single('profilePicture'), async (req, res) => {
-//   if (!req.user) {
-//     res.status(401).end()
-//     return
-//   }
+handler.patch(async (req, res) => {
+  if (!req.user || req.user.role!='admin') {
+    res.status(403).send('Not logged.')
+    return
+  }
 
-//   let profilePicture
+  const { _id, name, password } = req.body
+  const email = normalizeEmail(req.body.email)
+  
+  if (!isEmail(email)) {
+    res.status(400).send('The email you entered is invalid.')
+    return
+  }
+  if (!name) {
+    res.status(400).send('Informe um nome')
+    return
+  }
+  const currentUserInfo = await req.db.collection('users').findOne({ _id: mongodb.ObjectId(_id) })
+  if (currentUserInfo.email!=email && (await req.db.collection('users').countDocuments({ email })) > 0) {
+    res.status(403).send('The email has already been used.')
+  }
+  
+  const hashedPassword = password ? (await bcrypt.hash(password, 10)) : null
 
-//   if (req.file) {
-//     const image = await cloudinary.uploader.upload(req.file.path, {
-//       width: 512,
-//       height: 512,
-//       crop: 'fill',
-//     })
-//     profilePicture = image.public_id
-//   }
+  const user = await req.db.collection('users').updateOne(
+    { _id: mongodb.ObjectId(_id) },
+    {
+      $set: {
+        ...(name && { name }),
+        ...(email && { email }),
+        ...(hashedPassword && { password: hashedPassword }),
+      },
+    },
+  )
 
-//   const { name, bio } = req.body
-//   const currentProfilePicture = req.file ? req.body.currentProfilePicture : null
-
-//   await req.db.collection('users').updateOne(
-//     { _id: req.user._id },
-//     {
-//       $set: {
-//         ...(name && { name }),
-//         bio: bio || '',
-//         ...(profilePicture && { profilePicture }),
-//       },
-//     },
-//   ).then(cloudinary.uploader.destroy(currentProfilePicture))
-
-//   res.json({ user: { name, bio, profilePicture } })
-// })
+  res.status(201).json(extractUser(user))
+})
 
 handler.post(async (req, res) => {
   const role = req.query.editor ? 'editor' : 'admin'
