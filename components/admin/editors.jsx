@@ -112,6 +112,7 @@ const Users = (props) => {
         progressPending={loading}
         progressComponent={<ReactLoading type="spin" color="#0D7EA6" className="my-5"/>}
         onRowClicked={row => editUser(row._id)}
+        noDataComponent="Não há dados para exibir"
       />
     </div>
   )

@@ -31,15 +31,20 @@ handler.get(async (req, res) => {
       const author = await req.db.collection('users').findOne({ _id: post.author_id })
       if(post) req.db.collection('posts').updateOne( { "_id": post._id }, { $inc: { "clicks": 1 }})
       res.json({post: post, author: extractUser(author)})
+
+  } else if(req.query.pages) {
+    const pages = await req.db.collection('pages').find().toArray()
+    return res.json(pages)
+
   } else {
     const posts = await req.db.collection('posts').aggregate([
       {
         $lookup:
           {
-              from: "users",
-              localField: "author_id",
-              foreignField: "_id",
-              as: "author"
+            from: "users",
+            localField: "author_id",
+            foreignField: "_id",
+            as: "author"
           }
       }
     ]).toArray()

@@ -118,6 +118,7 @@ const AllPosts = (props) => {
         progressPending={loadingPosts}
         progressComponent={<ReactLoading type="spin" color="#0D7EA6" className="my-5"/>}
         onRowClicked={row => editPost(row._id)}
+        noDataComponent="Não há dados para exibir"
       />
     </div>
   )

@@ -5,13 +5,14 @@ import Layout from '@components/admin/layout/layout'
 import Sidebar from '@components/admin/layout/sidebar'
 import Editors from '@components/admin/editors'
 import AllPosts from '@components/admin/allPosts'
+import Pages from '@components/admin/pages'
 import EditProfile from '@components/admin/editProfile'
 import LoadingPage from '@components/loadingPage'
 import Login from '@pages/login'
 import { useUser } from '@lib/hooks'
 
 const IndexPage = ({ page, action }) => {
-  const initialPages = ['dashboard', 'posts', 'editProfile']
+  const initialPages = ['dashboard', 'posts', 'editProfile', 'pages']
 
   const [pages, setPages] = useState(initialPages)
   const [loading, setLoading] = useState(true)
@@ -42,7 +43,8 @@ const IndexPage = ({ page, action }) => {
     dashboard: <h1>conteudo</h1>,
     posts: <AllPosts action={action} setTitle={setTitle}/>,
     editProfile: <EditProfile />,
-    editors: <Editors setTitle={setTitle}/>
+    editors: <Editors setTitle={setTitle}/>,
+    pages: <Pages setTitle={setTitle}/>
   }
 
   return (
