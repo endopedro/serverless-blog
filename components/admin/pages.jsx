@@ -6,23 +6,23 @@ import { faPlusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router'
 import ReactLoading from 'react-loading'
 
-// import NewPost from '@components/admin/newPost'
+import NewPage from '@components/admin/newPage'
 
 const Pages = (props) => {
   useEffect(() => {
     getPages()
   }, [])
 
-  // const actions = ['new', 'edit']
+  const actions = ['new', 'edit']
 
-  // const getPostFromId = id => {
-  //   return posts.find(post => post._id == id)
-  // }
+  const getPageFromId = id => {
+    return pages.find(page => page._id == id)
+  }
 
   // const router = useRouter()
   const [pages, setPages] = useState([])
-  // const [action, setAction] = useState(actions.includes(props.action) ? props.action : null)
-  // const [selectedPost, setSelectedPost] = useState(null)
+  const [action, setAction] = useState(actions.includes(props.action) ? props.action : null)
+  const [selectedPage, setSelectedPage] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const getPages = async () => {
@@ -33,27 +33,27 @@ const Pages = (props) => {
     setLoading(false)
   }
 
-  // const editPost = id => {
-  //   setAction('edit')
-  //   setSelectedPost(getPostFromId(id))
-  // }
+  const editPage = id => {
+    setAction('edit')
+    setSelectedPage(getPageFromId(id))
+  }
 
-  // const goToPosts = () => {
-  //   props.setTitle('Posts')
-  //   setAction(null)
-  // }
+  const goToPages = () => {
+    props.setTitle('Páginas')
+    setAction(null)
+  }
 
-  // const deletePost = async (id) => {
-  //   const post = getPostFromId(id)
-  //   console.log("deletando: ", post.title)
-  //   const res = await fetch(`/api/posts?_id=${post._id}&thumb=${post.thumb}`, {method: 'DELETE'})
-  //   if (res.status === 201) {
-  //     console.log(`Post ${post.title} deletado com sucesso!`)
-  //     getPosts()
-  //   } else {
-  //     console.log("erro: " + await res.text())
-  //   }
-  // }
+  const deletePage = async (id) => {
+    const page = getPageFromId(id)
+    console.log("deletando: ", page.title)
+    const res = await fetch(`/api/posts?page=true&_id=${page._id}&thumb=${page.thumb}`, {method: 'DELETE'})
+    if (res.status === 201) {
+      console.log(`Página ${page.title} deletado com sucesso!`)
+      getPages()
+    } else {
+      console.log("erro: " + await res.text())
+    }
+  }
 
   const columns = [
     {
@@ -64,19 +64,19 @@ const Pages = (props) => {
     {
       name: 'Excluir',
       ignoreRowClick: true,
-      cell: row => <h5 className="delete-element" onClick={()=>deletePost(row._id)}><FontAwesomeIcon icon={faTimesCircle} /></h5>,
+      cell: row => <h5 className="delete-element" onClick={()=>deletePage(row._id)}><FontAwesomeIcon icon={faTimesCircle} /></h5>,
     }
   ];
 
-  // if(action == 'edit' && selectedPost) {
-  //   props.setTitle('Editar Post')
-  //   return <NewPost goToPosts={goToPosts} selectedPost={selectedPost} />
-  // }
+  if(action == 'edit' && selectedPage) {
+    props.setTitle('Editar Page')
+    return <NewPage goToPages={goToPages} selectedPage={selectedPage} />
+  }
 
-  // if(action == 'new') {
-  //   props.setTitle('Novo Post')
-  //   return <NewPost goToPosts={goToPosts} />
-  // }
+  if(action == 'new') {
+    props.setTitle('Nova Página')
+    return <NewPage goToPages={goToPages} />
+  }
 
   return (
     <div className="admin-content-element">

@@ -25,16 +25,20 @@ cloudinary.config({
 handler.use(middleware)
 
 handler.get(async (req, res) => {
-  if(req.query.slug) {
-      // const post = await req.db.collection('posts').findOneAndUpdate({"slug": req.query.slug },{ $inc: { "clicks": 1 } })
-      const post = await req.db.collection('posts').findOne({ slug: req.query.slug })
-      const author = await req.db.collection('users').findOne({ _id: post.author_id })
-      if(post) req.db.collection('posts').updateOne( { "_id": post._id }, { $inc: { "clicks": 1 }})
-      res.json({post: post, author: extractUser(author)})
-
-  } else if(req.query.pages) {
+  if(req.query.pages) {
     const pages = await req.db.collection('pages').find().toArray()
     return res.json(pages)
+
+  } else if(req.query.page) {
+    const page = await req.db.collection('pages').findOne({ slug: req.query.slug })
+    res.json(page)
+
+  } else if(req.query.slug) {
+    // const post = await req.db.collection('posts').findOneAndUpdate({"slug": req.query.slug },{ $inc: { "clicks": 1 } })
+    const post = await req.db.collection('posts').findOne({ slug: req.query.slug })
+    const author = await req.db.collection('users').findOne({ _id: post.author_id })
+    if(post) req.db.collection('posts').updateOne( { "_id": post._id }, { $inc: { "clicks": 1 }})
+    res.json({post: post, author: extractUser(author)})
 
   } else {
     const posts = await req.db.collection('posts').aggregate([
@@ -58,47 +62,83 @@ handler.post(upload.single('thumb'), async (req, res) => {
     return
   }
 
-  const {
-    title,
-    slug,
-    category,
-    content,
-    tags,
-  } = req.body
+  if(req.query.page) {
+    const {
+      title,
+      slug,
+      content,
+    } = req.body
 
-  if (!slug) {
-    res.status(403).send('Slug is missing.')
-    return
-  }
+    if (!slug) {
+      res.status(403).send('A página precisa de um slug.')
+      return
+    }
 
-  if ((await req.db.collection('posts').countDocuments({ slug })) > 0) {
-    res.status(403).send('The slug has already been used.')
-    return
-  }
+    if ((await req.db.collection('pages').countDocuments({ slug })) > 0) {
+      res.status(403).send('O Slug já está sendo utilizado.')
+      return
+    }
+    let thumb
 
-  let thumb
+    if (req.file) {
+      const image = await cloudinary.uploader.upload(req.file.path)
+      thumb = image.public_id
+    }
 
-  if (req.file) {
-    const image = await cloudinary.uploader.upload(req.file.path)
-    thumb = image.public_id
-  }
+    const page = await req.db
+      .collection('pages')
+      .insertOne({
+        date: new Date(),
+        title,
+        slug,
+        content: JSON.parse(content),
+        thumb: thumb ? thumb : null,
+      })
 
-  const post = await req.db
-    .collection('posts')
-    .insertOne({
-      author_id: mongodb.ObjectId(req.user._id),
-      date: new Date(),
+    res.status(201).json(page)
+  } else {
+    const {
       title,
       slug,
       category,
-      content: JSON.parse(content),
-      clicks: 0,
-      thumb: thumb ? thumb : null,
-      tags: JSON.parse(tags),
-    })
-    .then(({ ops }) => ops[0])
+      content,
+      tags,
+    } = req.body
 
-  res.status(201).json(post)
+    if (!slug) {
+      res.status(403).send('Slug is missing.')
+      return
+    }
+
+    if ((await req.db.collection('posts').countDocuments({ slug })) > 0) {
+      res.status(403).send('The slug has already been used.')
+      return
+    }
+
+    let thumb
+
+    if (req.file) {
+      const image = await cloudinary.uploader.upload(req.file.path)
+      thumb = image.public_id
+    }
+
+    const post = await req.db
+      .collection('posts')
+      .insertOne({
+        author_id: mongodb.ObjectId(req.user._id),
+        date: new Date(),
+        title,
+        slug,
+        category,
+        content: JSON.parse(content),
+        clicks: 0,
+        thumb: thumb ? thumb : null,
+        tags: JSON.parse(tags),
+      })
+      .then(({ ops }) => ops[0])
+
+    res.status(201).json(post)
+  }
 })
 
 handler.patch(upload.single('thumb'),async (req, res) => {
@@ -107,51 +147,95 @@ handler.patch(upload.single('thumb'),async (req, res) => {
     return
   }
 
-  const {
-    _id,
-    title,
-    currentThumb,
-    slug,
-    category,
-    content,
-    tags,
-  } = req.body
+  if(req.query.page) {
+    const {
+      _id,
+      title,
+      currentThumb,
+      slug,
+      content,
+    } = req.body
 
-  if (!slug) {
-    res.status(403).send('Slug is missing.')
-    return
-  }
+    if (!slug) {
+      res.status(403).send('A página precisa de um Slug.')
+      return
+    }
 
-  const currentPost = await req.db.collection('posts').findOne({ _id: mongodb.ObjectId(_id) })
+    const currentPage = await req.db.collection('pages').findOne({ _id: mongodb.ObjectId(_id) })
 
-  if ((currentPost.slug != slug) && (await req.db.collection('posts').countDocuments({ slug })) > 0) {
-    res.status(403).send('The slug has already been used.')
-    return
-  }
+    if ((currentPage.slug != slug) && (await req.db.collection('pages').countDocuments({ slug })) > 0) {
+      res.status(403).send('O Slug já está sendo utilizado.')
+      return
+    }
 
-  let thumb
+    let thumb
 
-  if (req.file) {
-    const image = await cloudinary.uploader.upload(req.file.path)
-    thumb = image.public_id
-  }
+    if (req.file) {
+      const image = await cloudinary.uploader.upload(req.file.path)
+      thumb = image.public_id
+    }
 
-  const post = await req.db.collection('posts').updateOne(
-    { _id: mongodb.ObjectId(_id) },
-    {
-      $set: {
-        author_id: mongodb.ObjectId(req.user._id),
-        ...(title && { title }),
-        ...(slug && { slug }),
-        ...(category && { category }),
-        content: JSON.parse(content),
-        ...(thumb && { thumb }),
-        tags: JSON.parse(tags),
+    const page = await req.db.collection('pages').updateOne(
+      { _id: mongodb.ObjectId(_id) },
+      {
+        $set: {
+          ...(title && { title }),
+          ...(slug && { slug }),
+          content: JSON.parse(content),
+          ...(thumb && { thumb }),
+        },
       },
-    },
-  ).then(cloudinary.uploader.destroy(currentThumb))
+    ).then(cloudinary.uploader.destroy(currentThumb))
 
-  res.status(201).json(post)
+    res.status(201).json(page)
+
+  } else {
+    const {
+      _id,
+      title,
+      currentThumb,
+      slug,
+      category,
+      content,
+      tags,
+    } = req.body
+
+    if (!slug) {
+      res.status(403).send('Slug is missing.')
+      return
+    }
+
+    const currentPost = await req.db.collection('posts').findOne({ _id: mongodb.ObjectId(_id) })
+
+    if ((currentPost.slug != slug) && (await req.db.collection('posts').countDocuments({ slug })) > 0) {
+      res.status(403).send('The slug has already been used.')
+      return
+    }
+
+    let thumb
+
+    if (req.file) {
+      const image = await cloudinary.uploader.upload(req.file.path)
+      thumb = image.public_id
+    }
+
+    const post = await req.db.collection('posts').updateOne(
+      { _id: mongodb.ObjectId(_id) },
+      {
+        $set: {
+          author_id: mongodb.ObjectId(req.user._id),
+          ...(title && { title }),
+          ...(slug && { slug }),
+          ...(category && { category }),
+          content: JSON.parse(content),
+          ...(thumb && { thumb }),
+          tags: JSON.parse(tags),
+        },
+      },
+    ).then(cloudinary.uploader.destroy(currentThumb))
+
+    res.status(201).json(post)
+  }
 })
 
 handler.delete(async (req, res) => {
@@ -160,13 +244,24 @@ handler.delete(async (req, res) => {
     return
   }
 
-  const {_id, thumb} = req.query
+  if(req.query.page) {
+    const {_id, thumb} = req.query
 
-  const post = await req.db.collection('posts').deleteOne(
-    { _id: mongodb.ObjectId(_id) }
-  ).then(cloudinary.uploader.destroy(thumb))
+    const post = await req.db.collection('pages').deleteOne(
+      { _id: mongodb.ObjectId(_id) }
+    ).then(cloudinary.uploader.destroy(thumb))
 
-  res.status(201).json(post)
+    res.status(201).json(post)
+
+  } else {
+    const {_id, thumb} = req.query
+
+    const post = await req.db.collection('posts').deleteOne(
+      { _id: mongodb.ObjectId(_id) }
+    ).then(cloudinary.uploader.destroy(thumb))
+
+    res.status(201).json(post)
+  }
 })
 
 export const config = {
