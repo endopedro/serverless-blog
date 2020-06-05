@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Navbar, Nav, Form, FormControl, Button, Dropdown, DropdownButton } from 'react-bootstrap'
 import Link from 'next/link'
 import { useUser } from '@lib/hooks'
@@ -9,6 +9,7 @@ import MenuDropDown from '@components/layout/menuDropDown'
 
 const MainNav = () => {
   const [user, { mutate }] = useUser()
+  const [pages, setPages] = useState(null)
 
   const handleLogout = async () => {
     await fetch('/api/auth', {
@@ -16,7 +17,17 @@ const MainNav = () => {
     })
     mutate(null)
   }
-  
+
+  const getPages = async () => {
+    const res = await fetch('/api/posts?pages=true', {method: 'GET'})
+    const json = await res.json()
+    setPages(json)
+  }
+
+  useEffect(() => {
+    getPages()
+  }, [])
+
   return (
     <Navbar expand="md" className="main-nav">
       <Link href="/" passHref>
@@ -25,7 +36,9 @@ const MainNav = () => {
       <Navbar.Toggle />
       <Navbar.Collapse className="justify-content-end">
         <Nav className="mr-auto">
-          <Nav.Link>Sobre</Nav.Link>
+          {pages?.map(page => (
+            <Nav.Link>{page.title}</Nav.Link>
+          ))}
           <Nav.Link>Arquivo</Nav.Link>
         </Nav>
         <Form inline>
