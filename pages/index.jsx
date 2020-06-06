@@ -34,6 +34,18 @@ const IndexPage = ({ post, page }) => {
       payload: {title: title, thumb: thumb}
     })
 
+  // const getPostBySlug = (slug) => {
+  //   const post = state.posts.filter(post => post.slug == slug)
+  //   if (post.length > 0) return post[0]
+  //   return false
+  // }
+
+  // const getPageBySlug = (slug) => {
+  //   const page = state.pages.filter(page => page.slug == slug)
+  //   if (page.length > 0) return page[0]
+  //   return false
+  // }
+
   const goToPost = (post) => {
     setActivePost(post)
     setComponentToShow(<Post />)
@@ -54,9 +66,13 @@ const IndexPage = ({ post, page }) => {
 
   useEffect(() => {
     if (post) goToPost(post)
-    else if (router.query.post) goToPost(state.posts.filter(post=>post.slug==router.query.post)[0])
+    // if (router.query.post && state.posts.includes(getPostBySlug(router.query.post))) {
+    //   goToPost(state.posts.filter(post=>post.slug==router.query.post)[0])
+    // }
     else if (page) goToPage(page)
-    else if (router.query.page) goToPage(state.pages.filter(page=>page.slug==router.query.page)[0])
+    // else if (router.query.page && state.pages.includes(router.query.page)) {
+    //   goToPage(state.pages.filter(page=>page.slug==router.query.page)[0])
+    // }
     else goToPosts()
   }, [router.query])
 
@@ -75,13 +91,13 @@ IndexPage.getInitialProps = async (context) => {
   const { page, post, archive, search, category } = context.query
   if (post) {
     const fetchPost = await getPost(post)
-    return { post: fetchPost }
-  } else if (page) {
-    const fetchPage = await getPage(page)
-    return { page: fetchPage }
-  } else {
-    return {}
+    if (!fetchPost.error) return { post: fetchPost }
   }
+  if (page) {
+    const fetchPage = await getPage(page)
+    if (!fetchPage.error) return { page: fetchPage }
+  }
+  return {}
 }
 
 export default IndexPage

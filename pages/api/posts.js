@@ -31,13 +31,18 @@ handler.get(async (req, res) => {
 
   } else if(req.query.page) {
     const page = await req.db.collection('pages').findOne({ slug: req.query.page })
-    res.json(page)
+    if(page) res.json(page)
+    else res.json({error: 'Página não encontrada.'})
 
   } else if(req.query.slug) {
     // const post = await req.db.collection('posts').findOneAndUpdate({"slug": req.query.slug },{ $inc: { "clicks": 1 } })
     const post = await req.db.collection('posts').findOne({ slug: req.query.slug })
-    post.author = extractUser(await req.db.collection('users').findOne({ _id: post.author_id }))
-    if(post) req.db.collection('posts').updateOne( { "_id": post._id }, { $inc: { "clicks": 1 }})
+    if(post) {
+      post.author = extractUser(await req.db.collection('users').findOne({ _id: post.author_id }))
+      req.db.collection('posts').updateOne( { "_id": post._id }, { $inc: { "clicks": 1 }})
+    } else {
+      res.json({error: 'Post não encontrado.'})
+    }
     res.json(post)
 
   } else {

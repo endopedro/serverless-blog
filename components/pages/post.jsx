@@ -38,7 +38,7 @@ import { BlogContext } from '@contexts/blogContext'
         <div className="post-content" dangerouslySetInnerHTML={{__html: content}}></div>
         <div className="post-tags">
           <FontAwesomeIcon icon={faTags} className="tag-icon"/>
-          {post.tags ? post.tags.map( tag => (<div className="post-tag">{tag}</div>)) : ''}
+          {post.tags ? post.tags.map((tag,key) => (<div className="post-tag" key={key}>{tag}</div>)) : ''}
         </div>
       </div>
     </Container>

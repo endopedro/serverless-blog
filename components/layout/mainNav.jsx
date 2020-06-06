@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useContext } from 'react'
 import { Navbar, Nav, Form, FormControl } from 'react-bootstrap'
 import Link from 'next/link'
 import { useUser } from '@lib/hooks'
 
 import MenuDropDown from '@components/layout/menuDropDown'
 import { BlogContext } from '@contexts/blogContext'
-import { getPages } from '@lib/crud-helpers'
 
 const MainNav = () => {
   const [state, dispatch] = useContext(BlogContext)
   const [user, { mutate }] = useUser()
-  const [pages, setPages] = useState(null)
 
   const handleLogout = async () => {
     await fetch('/api/auth', {
@@ -18,16 +16,6 @@ const MainNav = () => {
     })
     mutate(null)
   }
-
-  const loadPages = async () =>
-    dispatch({
-      type: 'SET_PAGES',
-      payload: await getPages()
-    })
-
-  useEffect(() => {
-    loadPages()
-  }, [])
 
   return (
     <Navbar expand="md" className="main-nav">
