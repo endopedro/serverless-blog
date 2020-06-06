@@ -32,6 +32,11 @@ handler.get(async (req, res) => {
     return res.json({ users: users.map(user=>extractUser(user)) })
   }
 
+  if (req.query.id) {
+    const user = await req.db.collection('users').findOne({ _id: mongodb.ObjectId(req.query.id) })
+    return res.json(extractUser(user))
+  }
+
   return res.json({ user: extractUser(req.user) })
 })
 
@@ -43,7 +48,7 @@ handler.patch(async (req, res) => {
 
   const { _id, name, password } = req.body
   const email = normalizeEmail(req.body.email)
-  
+
   if (!isEmail(email)) {
     res.status(400).send('The email you entered is invalid.')
     return
@@ -56,7 +61,7 @@ handler.patch(async (req, res) => {
   if (currentUserInfo.email!=email && (await req.db.collection('users').countDocuments({ email })) > 0) {
     res.status(403).send('The email has already been used.')
   }
-  
+
   const hashedPassword = password ? (await bcrypt.hash(password, 10)) : null
 
   const user = await req.db.collection('users').updateOne(
@@ -116,7 +121,7 @@ handler.delete(async (req, res) => {
   const user = await req.db
     .collection('users')
     .deleteOne({ _id: mongodb.ObjectId(editor._id) })
-  
+
   if (user) {
     cloudinary.uploader.destroy(editor.profilePicture)
     req.db.collection('posts').update(

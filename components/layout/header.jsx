@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Container, Image as Image2 } from 'react-bootstrap'
 import { Image } from 'cloudinary-react'
 const cloudName = process.env.CLOUDINARY_NAME
+import { BlogContext } from '@contexts/blogContext'
 
 const Header = (props) => {
-  const title = props.title ? props.title : ''
+  const [state, dispatch] = useContext(BlogContext)
+  const title = state.headerInfo.title ? state.headerInfo.title : ''
 
   return (
     <header className="header">
       <div className="header-wrapper">
-        {props.img ? (
-          <Image cloudName={cloudName} publicId={props.img} className="header-image" />
+        {state.headerInfo.thumb ? (
+          <Image cloudName={cloudName} publicId={state.headerInfo.thumb} className="header-image" />
         ) : (
           <Image2 className="header-image" src='/bg.jpg' />
         )}

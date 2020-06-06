@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { Navbar, Nav, Form, FormControl, Button, Dropdown, DropdownButton } from 'react-bootstrap'
+import React, { useState, useEffect, useContext } from 'react'
+import { Navbar, Nav, Form, FormControl } from 'react-bootstrap'
 import Link from 'next/link'
 import { useUser } from '@lib/hooks'
-// import { Image } from 'cloudinary-react'
-// const cloudName = process.env.CLOUDINARY_NAME
 
 import MenuDropDown from '@components/layout/menuDropDown'
+import { BlogContext } from '@contexts/blogContext'
+import { getPages } from '@lib/crud-helpers'
 
 const MainNav = () => {
+  const [state, dispatch] = useContext(BlogContext)
   const [user, { mutate }] = useUser()
   const [pages, setPages] = useState(null)
 
@@ -18,14 +19,14 @@ const MainNav = () => {
     mutate(null)
   }
 
-  const getPages = async () => {
-    const res = await fetch('/api/posts?pages=true', {method: 'GET'})
-    const json = await res.json()
-    setPages(json)
-  }
+  const loadPages = async () =>
+    dispatch({
+      type: 'SET_PAGES',
+      payload: await getPages()
+    })
 
   useEffect(() => {
-    getPages()
+    loadPages()
   }, [])
 
   return (
@@ -36,8 +37,10 @@ const MainNav = () => {
       <Navbar.Toggle />
       <Navbar.Collapse className="justify-content-end">
         <Nav className="mr-auto">
-          {pages?.map(page => (
-            <Nav.Link>{page.title}</Nav.Link>
+          {state.pages?.map((page, index) => (
+            <Link href={`/?page=${page.slug}`} key={index} passHref>
+              <Nav.Link >{page.title}</Nav.Link>
+            </Link>
           ))}
           <Nav.Link>Arquivo</Nav.Link>
         </Nav>
@@ -48,7 +51,7 @@ const MainNav = () => {
           <>
             <MenuDropDown handleLogout={handleLogout} user={user}/>
             <Nav className="mr-auto d-md-none">
-              <div class="dropdown-divider" role="separator"></div>
+              <div className="dropdown-divider" role="separator"></div>
               <Link href="/admin" passHref><Nav.Link className="text-info">Administração</Nav.Link></Link>
               <Link href="/profile" passHref><Nav.Link className="text-info">Perfil</Nav.Link></Link>
               <Nav.Link onClick={handleLogout} className="text-danger">Sair</Nav.Link>

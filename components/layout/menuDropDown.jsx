@@ -17,16 +17,16 @@ const MenuDropDown = (props) => {
     <ClickOutHandler onClickOut={handleClickOut}>
       <div className="menu-dropdown d-none d-md-block">
         <div className="picture" onClick={()=>setShowDropDown(!showDropDown)} >
-          <Image 
-            cloudName={cloudName} 
-            publicId={props.user.profilePicture ? props.user.profilePicture : `${process.env.WEB_URI}/no-pic.jpg`} 
-            className="user-image" 
+          <Image
+            cloudName={cloudName}
+            publicId={props.user.profilePicture ? props.user.profilePicture : `${process.env.WEB_URI}/no-pic.jpg`}
+            className="user-image"
             />
         </div>
         <div className={dropdownClass}>
           <Link href="/admin"><span className="dropdown-item">Administração</span></Link>
           <Link href="/profile"><span className="dropdown-item pb-2">Perfil</span></Link>
-          <div class="dropdown-divider m-0" role="separator"></div>
+          <div className="dropdown-divider m-0" role="separator"></div>
           <span className="dropdown-item pt-2" onClick={props.handleLogout}>Sair</span>
         </div>
       </div>

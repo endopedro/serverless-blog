@@ -30,15 +30,15 @@ handler.get(async (req, res) => {
     return res.json(pages)
 
   } else if(req.query.page) {
-    const page = await req.db.collection('pages').findOne({ slug: req.query.slug })
+    const page = await req.db.collection('pages').findOne({ slug: req.query.page })
     res.json(page)
 
   } else if(req.query.slug) {
     // const post = await req.db.collection('posts').findOneAndUpdate({"slug": req.query.slug },{ $inc: { "clicks": 1 } })
     const post = await req.db.collection('posts').findOne({ slug: req.query.slug })
-    const author = await req.db.collection('users').findOne({ _id: post.author_id })
+    post.author = extractUser(await req.db.collection('users').findOne({ _id: post.author_id }))
     if(post) req.db.collection('posts').updateOne( { "_id": post._id }, { $inc: { "clicks": 1 }})
-    res.json({post: post, author: extractUser(author)})
+    res.json(post)
 
   } else {
     const posts = await req.db.collection('posts').aggregate([
