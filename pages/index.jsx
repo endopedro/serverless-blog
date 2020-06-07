@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
 
-import { getPost, getPage } from '@lib/crud-helpers'
+import { getPost, getPage, getCategories } from '@lib/crud-helpers'
 import { BlogContext } from '@contexts/blogContext'
 
 import Layout from '@components/layout/layout'
@@ -9,6 +9,7 @@ import Header from '@components/layout/header'
 import Posts from '@components/pages/posts'
 import Post from '@components/pages/post'
 import Page from '@components/pages/page'
+import Results from '@components/pages/results'
 
 const IndexPage = ({ post, page }) => {
   const router = useRouter()
@@ -54,7 +55,6 @@ const IndexPage = ({ post, page }) => {
 
   const goToPosts = () => {
     setComponentToShow(<Posts />)
-    setActivePost(null)
     setHeaderInfo('Serverless Blog', null)
   }
 
@@ -62,6 +62,11 @@ const IndexPage = ({ post, page }) => {
     setActivePage(page)
     setComponentToShow(<Page />)
     setHeaderInfo(page.title, page.thumb)
+  }
+
+  const goToResults = (query, type) => {
+    setComponentToShow(<Results query={query} type={type}/>)
+    setHeaderInfo(query, null)
   }
 
   useEffect(() => {
@@ -73,6 +78,7 @@ const IndexPage = ({ post, page }) => {
     // else if (router.query.page && state.pages.includes(router.query.page)) {
     //   goToPage(state.pages.filter(page=>page.slug==router.query.page)[0])
     // }
+    else if (router.query.category) goToResults(router.query.category, 'category')
     else goToPosts()
   }, [router.query])
 

@@ -5,6 +5,7 @@ export const BlogContext = createContext();
 const initialState = {
   pages: [],
   posts: [],
+  categories: [],
   headerInfo: {
     title: 'Serverless Blog',
     thumb: null
@@ -35,6 +36,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         activePage: action.payload,
+      };
+    case "SET_CATEGORIES":
+      return {
+        ...state,
+        categories: [...action.payload]
       };
     case "SET_HEADER_INFO":
       return {

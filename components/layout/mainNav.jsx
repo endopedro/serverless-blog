@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Navbar, Nav, Form, FormControl } from 'react-bootstrap'
+import { Navbar, Nav, Form, FormControl, NavDropdown } from 'react-bootstrap'
 import Link from 'next/link'
 import { useUser } from '@lib/hooks'
 
@@ -27,10 +27,21 @@ const MainNav = () => {
         <Nav className="mr-auto">
           {state.pages?.map((page, index) => (
             <Link href={`/?page=${page.slug}`} key={index} passHref>
-              <Nav.Link >{page.title}</Nav.Link>
+              <Nav.Link>{page.title}</Nav.Link>
             </Link>
           ))}
-          <Nav.Link>Arquivo</Nav.Link>
+          {/* <Link href={`/?categories=true`} passHref>
+            <Nav.Link>Categorias</Nav.Link>
+          </Link> */}
+          {state.categories.length > 0 && (
+            <NavDropdown title="Categorias" id="basic-nav-dropdown">
+              {state.categories.map((category, index) => (
+                <Link href={`/?category=${category.name}`} key={index} passHref>
+                  <NavDropdown.Item>{category.name}</NavDropdown.Item>
+                </Link>
+              ))}
+            </NavDropdown>
+          )}
         </Nav>
         <Form inline>
           <FormControl type="text" placeholder="Pesquisar" className="mr-sm-2" />

@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react'
 
 import { BlogContext } from '@contexts/blogContext'
-import { getPosts, getPages } from '@lib/crud-helpers'
+import { getPosts, getPages, getCategories } from '@lib/crud-helpers'
 
 import SiteHead from '@components/layout/siteHead'
 import MainNav from '@components/layout/mainNav'
@@ -24,9 +24,16 @@ export default ({ children }) => {
       payload: await getPages()
     })
 
+  const loadCategories = async () =>
+    dispatch({
+      type: 'SET_CATEGORIES',
+      payload: await getCategories()
+    })
+
   useEffect(() => {
     loadPages()
     loadPosts()
+    loadCategories()
   }, [])
 
   return (
