@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { useUser } from '@lib/hooks'
 import slugify from 'slugify'
 import { Form, Button, Col } from 'react-bootstrap'
 import dynamic from 'next/dynamic'
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFeatherAlt, faPencilAlt, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
+import { faFeatherAlt, faPencilAlt, faArrowCircleLeft, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+
+import { useUser } from '@lib/hooks'
 import { getCategories } from '@lib/crud-helpers'
 
 const Editor = dynamic(
@@ -21,6 +22,7 @@ const NewPost = props => {
   const [successMsg, setSuccessMsg] = useState('')
   const [thumbName, setThumbName] = useState(null)
   const [categories, setCategories] = useState([])
+  const [tagsInput, setTagsInput] = useState('')
   const [postForm, setPostForm] = useState({
     title: '',
     slug: '',
@@ -28,9 +30,26 @@ const NewPost = props => {
     category: '',
     content: EditorState.createEmpty(),
     thumb: '',
-    tags: ["carros", "casas", "toalhas"],
+    tags: [],
     method: 'POST'
   })
+
+  const addTag = () => {
+    if (tagsInput && !postForm.tags.includes(tagsInput)) {
+      const tags = [...postForm.tags]
+      tags.push(tagsInput)
+      setPostForm({...postForm, tags: [...tags]})
+      setTagsInput('')
+    }
+  }
+
+  const removeTag = (tag) => {
+    if(postForm.tags.includes(tag)) {
+      const tags = [...postForm.tags]
+      tags.splice(postForm.tags.indexOf(tag),1)
+      setPostForm({...postForm, tags: tags})
+    }
+  }
 
   const fetchCategories = async () => {
     setCategories(await getCategories())
@@ -140,7 +159,7 @@ const NewPost = props => {
             </Form.Control>
           </Form.Group>
 
-          <Form.Group as={Col} controlId="postCategory">
+          <Form.Group as={Col} controlId="postThumb">
             <Form.Label>Thumbnail</Form.Label>
             <Form.File
               id="postThumb"
@@ -154,6 +173,33 @@ const NewPost = props => {
           </Form.Group>
         </Form.Row>
 
+          <Form.Row className="align-items-center mb-3">
+            <Col sm={3}>
+            <Form.Label for="tags">Tags</Form.Label>
+              <div className="d-flex">
+                <Form.Control
+                  id="tags"
+                  size="sm"
+                  placeholder="Digite a tag"
+                  value={tagsInput}
+                  onChange={e=>setTagsInput(e.target.value)}
+                />
+                <Button
+                  variant="info"
+                  size="sm"
+                  className="mb-3"
+                  onClick={addTag}
+                >
+                  <FontAwesomeIcon icon={faPlusCircle}/>
+                </Button>
+              </div>
+              <div>
+                {postForm.tags.map(tag => <Button variant="info" size="sm" className="mr-2" onClick={()=>removeTag(tag)}>{tag}</Button>)}
+              </div>
+            </Col>
+          </Form.Row>
+
+        <Form.Label>Conteúdo</Form.Label>
         <Editor
           editorState={postForm.content}
           editorClassName="editor"

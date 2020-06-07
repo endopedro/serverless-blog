@@ -41,7 +41,7 @@
     "react-bootstrap": "^1.0.0",
     "react-clickout-handler": "^1.2.1",
     "react-data-table-component": "^6.9.1",
-    "react-dom": "16.13.1",
+    "react-dom": "^16.13.1",
     "react-draft-wysiwyg": "^1.14.5",
     "react-loading": "^2.0.3",
     "slugify": "^1.4.0",
