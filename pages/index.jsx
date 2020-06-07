@@ -10,57 +10,50 @@ import Posts from '@components/pages/posts'
 import Post from '@components/pages/post'
 import Page from '@components/pages/page'
 import Results from '@components/pages/results'
+import LoadingPage from '@components/loadingPage'
 
-const IndexPage = ({ post, page }) => {
+const IndexPage = () => {
   const router = useRouter()
 
   const [componentToShow, setComponentToShow] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [state, dispatch] = useContext(BlogContext)
 
-  const setActivePost = (post) =>
-    dispatch({
-      type: 'SET_ACTIVE_POST',
-      payload: post
-    })
-
-  const setActivePage = (page) =>
-    dispatch({
-      type: 'SET_ACTIVE_PAGE',
-      payload: page
-    })
-
   const setHeaderInfo = (title, thumb) =>
-    dispatch({
-      type: 'SET_HEADER_INFO',
-      payload: {title: title, thumb: thumb}
-    })
+    dispatch({ type: 'SET_HEADER_INFO', payload: {title: title, thumb: thumb} })
 
-  // const getPostBySlug = (slug) => {
-  //   const post = state.posts.filter(post => post.slug == slug)
-  //   if (post.length > 0) return post[0]
-  //   return false
-  // }
+  const getPostBySlug = (slug) => state.posts.find(post => post.slug == slug)
 
-  // const getPageBySlug = (slug) => {
-  //   const page = state.pages.filter(page => page.slug == slug)
-  //   if (page.length > 0) return page[0]
-  //   return false
-  // }
-
-  const goToPost = (post) => {
-    setActivePost(post)
-    setComponentToShow(<Post />)
-    setHeaderInfo(null, post.thumb)
-  }
+  const getPageBySlug = (slug) => state.pages.find(page => page.slug == slug)
 
   const goToPosts = () => {
     setComponentToShow(<Posts />)
     setHeaderInfo('Serverless Blog', null)
   }
 
-  const goToPage = (page) => {
-    setActivePage(page)
-    setComponentToShow(<Page />)
+  const goToPost = async (slug) => {
+    let fetchPost = {}
+    if(!state.posts.includes(getPostBySlug(slug))) {
+      setIsLoading(true)
+      fetchPost = await getPost(slug)
+      setIsLoading(false)
+      if(!fetchPost.slug) return
+    }
+    const post = fetchPost.slug ? fetchPost : getPostBySlug(slug)
+    setComponentToShow(<Post post={post}/>)
+    setHeaderInfo(null, post.thumb)
+  }
+
+  const goToPage = async (slug) => {
+    let fetchPage = {}
+    if(!state.pages.includes(getPageBySlug(slug))) {
+      setIsLoading(true)
+      fetchPage = await getPage(slug)
+      setIsLoading(false)
+      if(!fetchPage.slug) return
+    }
+    const page = fetchPage.slug ? fetchPage : getPageBySlug(slug)
+    setComponentToShow(<Page page={page}/>)
     setHeaderInfo(page.title, page.thumb)
   }
 
@@ -70,18 +63,13 @@ const IndexPage = ({ post, page }) => {
   }
 
   useEffect(() => {
-    if (post) goToPost(post)
-    // if (router.query.post && state.posts.includes(getPostBySlug(router.query.post))) {
-    //   goToPost(state.posts.filter(post=>post.slug==router.query.post)[0])
-    // }
-    else if (page) goToPage(page)
-    // else if (router.query.page && state.pages.includes(router.query.page)) {
-    //   goToPage(state.pages.filter(page=>page.slug==router.query.page)[0])
-    // }
+    if (router.query.post) goToPost(router.query.post)
+    else if (router.query.page) goToPage(router.query.page)
     else if (router.query.category) goToResults(router.query.category, 'category')
     else goToPosts()
   }, [router.query])
 
+  if(isLoading) return <LoadingPage/>
 
   return (
     <Layout>
@@ -93,17 +81,17 @@ const IndexPage = ({ post, page }) => {
   )
 }
 
-IndexPage.getInitialProps = async (context) => {
-  const { page, post, archive, search, category } = context.query
-  if (post) {
-    const fetchPost = await getPost(post)
-    if (!fetchPost.error) return { post: fetchPost }
-  }
-  if (page) {
-    const fetchPage = await getPage(page)
-    if (!fetchPage.error) return { page: fetchPage }
-  }
-  return {}
-}
+// IndexPage.getInitialProps = async (context) => {
+//   const { page, post, archive, search, category } = context.query
+//   if (post) {
+//     const fetchPost = await getPost(post)
+//     if (!fetchPost.error) return { post: fetchPost }
+//   }
+//   if (page) {
+//     const fetchPage = await getPage(page)
+//     if (!fetchPage.error) return { page: fetchPage }
+//   }
+//   return {}
+// }
 
 export default IndexPage

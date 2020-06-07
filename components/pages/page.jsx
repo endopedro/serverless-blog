@@ -1,21 +1,20 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Container } from 'react-bootstrap'
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 
-import { BlogContext } from '@contexts/blogContext'
-
-const Page = () => {
-  const [state, dispatch] = useContext(BlogContext)
-  const page = state.activePage
-  const content = draftToHtml(convertToRaw(EditorState.createWithContent(convertFromRaw((page.content))).getCurrentContent()))
+const Page = (props) => {
+  const page = props.page
+  const getContent = (content) => draftToHtml(convertToRaw(EditorState.createWithContent(convertFromRaw((content))).getCurrentContent()))
 
    return (
     <Container>
-      <div className="single-page">
-        {/* <h2 className="page-title">{page.title}</h2> */}
-        <div className="page-content" dangerouslySetInnerHTML={{__html: content}}></div>
-      </div>
+      {page && (
+        <div className="single-page">
+          {/* <h2 className="page-title">{page.title}</h2> */}
+          <div className="page-content" dangerouslySetInnerHTML={{__html: getContent(page.content)}}></div>
+        </div>
+      )}
     </Container>
   )
 }

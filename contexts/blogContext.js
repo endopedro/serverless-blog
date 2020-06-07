@@ -1,6 +1,6 @@
-import React, { useReducer, createContext } from "react";
+import React, { useReducer, createContext } from "react"
 
-export const BlogContext = createContext();
+export const BlogContext = createContext()
 
 const initialState = {
   pages: [],
@@ -10,10 +10,8 @@ const initialState = {
     title: 'Serverless Blog',
     thumb: null
   },
-  activePost: null,
-  activePage: null,
   loading: false,
-};
+}
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -22,20 +20,10 @@ const reducer = (state, action) => {
         ...state,
         posts: [...action.payload]
       };
-    case "SET_ACTIVE_POST":
-      return {
-        ...state,
-        activePost: action.payload,
-      };
     case "SET_PAGES":
       return {
         ...state,
         pages: [...action.payload]
-      };
-    case "SET_ACTIVE_PAGE":
-      return {
-        ...state,
-        activePage: action.payload,
       };
     case "SET_CATEGORIES":
       return {
