@@ -25,7 +25,7 @@ const Results = (props) => {
     <Container>
       <div className="single-page">
         {posts.length > 0 ? (
-          posts.map(post => (<PostString post={post}/>))
+          posts.map((post,key) => (<PostString key={key} post={post}/>))
         ) : (
           <h4 className="text-center my-5">Nenhum post encontrado para esta categoria.</h4>
         )}

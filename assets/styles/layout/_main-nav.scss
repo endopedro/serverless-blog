@@ -6,6 +6,10 @@
     .navbar-collapse {
       height: 100%;
 
+      .navbar-search {
+        max-width: 300px;
+      }
+
       .navbar-nav {
         height: 100%;
 

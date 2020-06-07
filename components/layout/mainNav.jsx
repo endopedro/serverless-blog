@@ -1,20 +1,27 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Navbar, Nav, Form, FormControl, NavDropdown } from 'react-bootstrap'
 import Link from 'next/link'
 import { useUser } from '@lib/hooks'
+import { useRouter } from 'next/router'
 
 import MenuDropDown from '@components/layout/menuDropDown'
 import { BlogContext } from '@contexts/blogContext'
 
 const MainNav = () => {
+  const router = useRouter()
   const [state, dispatch] = useContext(BlogContext)
   const [user, { mutate }] = useUser()
+  const [searchText, setSearchText] = useState('')
 
   const handleLogout = async () => {
     await fetch('/api/auth', {
       method: 'DELETE',
     })
     mutate(null)
+  }
+
+  const goSearch = () => {
+    if(searchText) router.push(`/?search=${searchText}`)
   }
 
   return (
@@ -43,9 +50,15 @@ const MainNav = () => {
             </NavDropdown>
           )}
         </Nav>
-        <Form inline>
-          <FormControl type="text" placeholder="Pesquisar" className="mr-sm-2" />
-        </Form>
+          <FormControl 
+            type="text" 
+            placeholder="Pesquisar" 
+            className="mr-sm-2 navbar-search" 
+            onChange={e => setSearchText(e.target.value)}
+            onKeyPress={event => {
+              if (event.key === 'Enter') goSearch()
+            }}
+          />
         {user && (
           <>
             <MenuDropDown handleLogout={handleLogout} user={user}/>

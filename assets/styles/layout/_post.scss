@@ -23,6 +23,13 @@
       font-size: 1.125rem;
       font-weight: $font-weight-normal;
       margin-bottom: 1.25rem;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:hover {
+        color: $info;
+        transform: translateY(-2px);
+      }
     }
 
     .post-clicks {

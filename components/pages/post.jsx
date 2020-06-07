@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFeatherAlt, faCalendarAlt, faEye, faTags } from '@fortawesome/free-solid-svg-icons'
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
+import Link from 'next/link'
 
 
  const Post = (props) => {
@@ -26,7 +27,9 @@ import draftToHtml from 'draftjs-to-html'
       {post && (
         <div className="single-post">
           <div className="post-header">
-            <h5 className="post-category">#{post.category}</h5>
+            <Link href={`/?category=${post.category}`} passHref>
+              <h5 className="post-category">#{post.category}</h5>
+            </Link>
             <div className="post-clicks"><FontAwesomeIcon icon={faEye} className="eye-icon" />{post.clicks+1}</div>
           </div>
           <h2 className="post-title">{post.title}</h2>

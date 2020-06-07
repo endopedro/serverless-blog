@@ -83,17 +83,4 @@ const IndexPage = () => {
   )
 }
 
-// IndexPage.getInitialProps = async (context) => {
-//   const { page, post, archive, search, category } = context.query
-//   if (post) {
-//     const fetchPost = await getPost(post)
-//     if (!fetchPost.error) return { post: fetchPost }
-//   }
-//   if (page) {
-//     const fetchPage = await getPage(page)
-//     if (!fetchPage.error) return { page: fetchPage }
-//   }
-//   return {}
-// }
-
 export default IndexPage
