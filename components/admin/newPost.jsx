@@ -25,7 +25,7 @@ const NewPost = props => {
     title: '',
     slug: '',
     _id: '',
-    category: null,
+    category: '',
     content: EditorState.createEmpty(),
     thumb: '',
     tags: ["carros", "casas", "toalhas"],
@@ -35,6 +35,10 @@ const NewPost = props => {
   const fetchCategories = async () => {
     setCategories(await getCategories())
   }
+
+  useEffect(() => {
+    if(categories.length > 0) setPostForm({...postForm, category: categories[0]._id})
+  }, [categories])
 
   useEffect(() => {
     fetchCategories()
@@ -86,6 +90,7 @@ const NewPost = props => {
   }
 
   const handlePostForm = (fieldName, value) => {
+    console.log('state',postForm)
     // console.log(draftToHtml((convertToRaw(postForm.content.getCurrentContent()))))
     setPostForm(prevState => ({
       ...prevState,
