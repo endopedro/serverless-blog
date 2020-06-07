@@ -6,9 +6,10 @@ import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFeatherAlt, faPencilAlt, faArrowCircleLeft, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import Link from 'next/link'
 
 import { useUser } from '@lib/hooks'
-import { getCategories } from '@lib/crud-helpers'
+import { getCategories, getPost } from '@lib/crud-helpers'
 
 const Editor = dynamic(
   () => import('react-draft-wysiwyg').then(mod => mod.Editor),
@@ -59,22 +60,26 @@ const NewPost = props => {
     if(categories.length > 0) setPostForm({...postForm, category: categories[0]._id})
   }, [categories])
 
-  useEffect(() => {
-    fetchCategories()
-
-    if(props.selectedPost) {
+  const loadPostToEdit = async () => {
+    const post = await getPost(props.postSlug)
+    if(post.slug) {
       setPostForm({
         ...postForm,
-        category: props.selectedPost.category,
-        content: EditorState.createWithContent(convertFromRaw((props.selectedPost.content))),
-        slug: props.selectedPost.slug,
-        tags: props.selectedPost.tags,
-        thumb: props.selectedPost.thumb,
-        title: props.selectedPost.title,
-        _id: props.selectedPost._id,
+        category: post.category,
+        content: EditorState.createWithContent(convertFromRaw((post.content))),
+        slug: post.slug,
+        tags: post.tags,
+        thumb: post.thumb,
+        title: post.title,
+        _id: post._id,
         method: 'PATCH'
       })
     }
+  }
+
+  useEffect(() => {
+    fetchCategories()
+    if(props.postSlug) loadPostToEdit()
   }, [])
 
   const handleSubmit = async (e) => {
@@ -109,7 +114,6 @@ const NewPost = props => {
   }
 
   const handlePostForm = (fieldName, value) => {
-    console.log('state',postForm)
     // console.log(draftToHtml((convertToRaw(postForm.content.getCurrentContent()))))
     setPostForm(prevState => ({
       ...prevState,
@@ -207,9 +211,11 @@ const NewPost = props => {
         />
 
         <div className="mt-3 d-flex">
-          <Button variant="dark" size={'sm'} onClick={props.goToPosts}><FontAwesomeIcon icon={faArrowCircleLeft} className="mr-2" />Cancelar</Button>
-          <Button variant="secondary" size={'sm'} className="ml-auto mr-3"><FontAwesomeIcon icon={faPencilAlt} className="mr-2"/>Salvar Rascunho</Button>
-          <Button variant="info" size={'sm'} type="submit"><FontAwesomeIcon icon={faFeatherAlt} className="mr-2"/>Publicar</Button>
+          <Link href="/admin?posts=true" passHref>
+            <Button variant="dark" size={'sm'} onClick={props.goToPosts}><FontAwesomeIcon icon={faArrowCircleLeft} className="mr-2" />Cancelar</Button>
+          </Link>
+          {/* <Button variant="secondary" size={'sm'} className="ml-auto mr-3"><FontAwesomeIcon icon={faPencilAlt} className="mr-2"/>Salvar Rascunho</Button> */}
+          <Button variant="info" size={'sm'} className="ml-auto mr-3" type="submit"><FontAwesomeIcon icon={faFeatherAlt} className="mr-2"/>Publicar</Button>
         </div>
       </Form>
     </div>

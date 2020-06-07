@@ -7,6 +7,9 @@ import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFeatherAlt, faPencilAlt, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
+import Link from 'next/link'
+
+import { getPage } from '@lib/crud-helpers'
 
 const Editor = dynamic(
   () => import('react-draft-wysiwyg').then(mod => mod.Editor),
@@ -28,18 +31,23 @@ const NewPage = props => {
     method: 'POST'
   })
 
-  useEffect(() => {
-    if(props.selectedPage) {
+  const loadPageToEdit = async () => {
+    const page = await getPage(props.pageSlug)
+    if(page.slug) {
       setPageForm({
         ...pageForm,
-        content: EditorState.createWithContent(convertFromRaw((props.selectedPage.content))),
-        slug: props.selectedPage.slug,
-        thumb: props.selectedPage.thumb,
-        title: props.selectedPage.title,
-        _id: props.selectedPage._id,
+        content: EditorState.createWithContent(convertFromRaw((page.content))),
+        slug: page.slug,
+        thumb: page.thumb,
+        title: page.title,
+        _id: page._id,
         method: 'PATCH'
       })
     }
+  }
+
+  useEffect(() => {
+    if(props.pageSlug) loadPageToEdit()
   }, [])
 
   const handleSubmit = async (e) => {
@@ -124,9 +132,11 @@ const NewPage = props => {
         />
 
         <div className="mt-3 d-flex">
-          <Button variant="dark" size={'sm'} onClick={props.goToPages}><FontAwesomeIcon icon={faArrowCircleLeft} className="mr-2" />Cancelar</Button>
-          <Button variant="secondary" size={'sm'} className="ml-auto mr-3"><FontAwesomeIcon icon={faPencilAlt} className="mr-2"/>Salvar Rascunho</Button>
-          <Button variant="info" size={'sm'} type="submit"><FontAwesomeIcon icon={faFeatherAlt} className="mr-2"/>Publicar</Button>
+          <Link href="/admin?pages=true" passHref>
+            <Button variant="dark" size={'sm'}><FontAwesomeIcon icon={faArrowCircleLeft} className="mr-2" />Cancelar</Button>
+          </Link>
+          {/* <Button variant="secondary" size={'sm'} className="ml-auto mr-3"><FontAwesomeIcon icon={faPencilAlt} className="mr-2"/>Salvar Rascunho</Button> */}
+          <Button variant="info" size={'sm'} className="ml-auto mr-3" type="submit"><FontAwesomeIcon icon={faFeatherAlt} className="mr-2"/>Publicar</Button>
         </div>
       </Form>
     </div>

@@ -1,74 +1,71 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
+import { useRouter } from 'next/router'
+
+import { useUser } from '@lib/hooks'
 
 import Layout from '@components/admin/layout/layout'
 import Sidebar from '@components/admin/layout/sidebar'
 import Editors from '@components/admin/editors'
 import AllPosts from '@components/admin/allPosts'
+import NewPost from '@components/admin/newPost'
+import NewPage from '@components/admin/newPage'
 import Pages from '@components/admin/pages'
 import Categories from '@components/admin/categories'
 import EditProfile from '@components/admin/editProfile'
 import LoadingPage from '@components/loadingPage'
 import Login from '@pages/login'
-import { useUser } from '@lib/hooks'
 
 const IndexPage = ({ page, action }) => {
-  const initialPages = ['dashboard', 'posts', 'editProfile', 'pages', 'categories']
+  const router = useRouter()
 
-  const [pages, setPages] = useState(initialPages)
   const [loading, setLoading] = useState(true)
   const [user, { mutate }] = useUser()
   const [isLogged, setIsLogged] = useState(false)
-  const [activePage, setActivePage] = useState(initialPages.includes(page) ? page : 'dashboard')
+  const [activePage, setActivePage] = useState('')
   const [title, setTitle] = useState('Dashboard')
 
   useEffect(() => {
     if (user) {
       setIsLogged(true)
       setLoading(false)
-      if (user.role == 'admin') setPages([...pages, 'editors'])
     } else if (user === null) {
       setLoading(false)
     }
   }, [user])
 
-  if (loading) return <LoadingPage />
-  if (!isLogged) return <Login/>
-
-  const handlePages = page => {
-    setTitle(page)
+  const handlePages = (page, title) => {
+    setTitle(title)
     setActivePage(page)
   }
 
-  const content = {
-    dashboard: <h1>conteudo</h1>,
-    posts: <AllPosts action={action} setTitle={setTitle}/>,
-    editProfile: <EditProfile />,
-    editors: <Editors setTitle={setTitle}/>,
-    pages: <Pages setTitle={setTitle}/>,
-    categories: <Categories />
-  }
+  useEffect(() => {
+    if (router.query.posts) handlePages(<AllPosts />, 'Posts')
+    else if (router.query.newPost) handlePages(<NewPost />, 'Novo Post')
+    else if (router.query.editPost) handlePages(<NewPost postSlug={router.query.editPost} />, 'Editar Post')
+    else if (router.query.editProfile) handlePages(<EditProfile />, 'Editar Perfil')
+    else if (router.query.editors && user.role=='admin') handlePages(<Editors />, 'Editores')
+    else if (router.query.pages) handlePages(<Pages />, 'Páginas')
+    else if (router.query.newPage) handlePages(<NewPage />, 'Nova Página')
+    else if (router.query.editPage) handlePages(<NewPage pageSlug={router.query.editPage}/>, 'Editar Página')
+    else if (router.query.categories) handlePages(<Categories />, 'Categorias')
+    else handlePages(<h1>conteudo</h1>, 'Dashboard')
+  }, [router.query])
+
+  if (loading) return <LoadingPage />
+  if (!isLogged) return <Login/>
 
   return (
     <Layout>
       <div className="admin">
-        <Sidebar
-          handlePages={handlePages}
-          pages={pages}
-          activePage={activePage}
-          user={user}
-        />
+        <Sidebar query={router.query} />
         <div className="admin-content">
           <h2 className="admin-action-label text-capitalize">{title}</h2>
-
-          {content[activePage]}
+          { activePage }
         </div>
-
       </div>
     </Layout>
   )
 }
-
-IndexPage.getInitialProps = context => (context.query)
 
 export default IndexPage

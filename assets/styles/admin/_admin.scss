@@ -23,6 +23,19 @@
     color: $danger;
     transition: 0.2s;
     margin-bottom: 0;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.5);
+    }
+  }
+
+  .edit-element {
+    color: $info;
+    transition: 0.2s;
+    margin-bottom: 0;
+    margin-left: 0.5rem;
+    cursor: pointer;
 
     &:hover {
       transform: scale(1.5);
