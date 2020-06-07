@@ -6,11 +6,13 @@ import { faPlusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router'
 import ReactLoading from 'react-loading'
 
+import { getCategories, getPosts } from '@lib/crud-helpers'
 import NewPost from '@components/admin/newPost'
 
 const AllPosts = (props) => {
   useEffect(() => {
-    getPosts()
+    fetchCategories()
+    fetchPosts()
   }, [])
 
   const actions = ['new', 'edit']
@@ -19,17 +21,24 @@ const AllPosts = (props) => {
     return posts.find(post => post._id == id)
   }
 
+  const getCategoryFromId = id => {
+    return categories.find(category => category._id == id)
+  }
+
   const router = useRouter()
   const [posts, setPosts] = useState([])
   const [action, setAction] = useState(actions.includes(props.action) ? props.action : null)
   const [selectedPost, setSelectedPost] = useState(null)
   const [loadingPosts, setLoadingPosts] = useState(true)
+  const [categories, setCategories] = useState([])
 
-  const getPosts = async () => {
+  const fetchCategories = async () => {
+    setCategories(await getCategories)
+  }
+
+  const fetchPosts = async () => {
     setLoadingPosts(true)
-    const res = await fetch('/api/posts')
-    const json = await res.json()
-    setPosts(json)
+    setPosts(await getPosts())
     setLoadingPosts(false)
   }
 
@@ -49,7 +58,7 @@ const AllPosts = (props) => {
     const res = await fetch(`/api/posts?_id=${post._id}&thumb=${post.thumb}`, {method: 'DELETE'})
     if (res.status === 201) {
       console.log(`Post ${post.title} deletado com sucesso!`)
-      getPosts()
+      fetchPosts()
     } else {
       console.log("erro: " + await res.text())
     }

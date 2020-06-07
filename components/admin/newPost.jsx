@@ -7,6 +7,7 @@ import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFeatherAlt, faPencilAlt, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
+import { getCategories } from '@lib/crud-helpers'
 
 const Editor = dynamic(
   () => import('react-draft-wysiwyg').then(mod => mod.Editor),
@@ -19,18 +20,25 @@ const NewPost = props => {
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
   const [thumbName, setThumbName] = useState(null)
+  const [categories, setCategories] = useState([])
   const [postForm, setPostForm] = useState({
     title: '',
     slug: '',
     _id: '',
-    category: '',
+    category: null,
     content: EditorState.createEmpty(),
     thumb: '',
     tags: ["carros", "casas", "toalhas"],
     method: 'POST'
   })
 
+  const fetchCategories = async () => {
+    setCategories(await getCategories())
+  }
+
   useEffect(() => {
+    fetchCategories()
+
     if(props.selectedPost) {
       setPostForm({
         ...postForm,
@@ -121,10 +129,9 @@ const NewPost = props => {
               value={postForm.category}
               onChange={e => handlePostForm('category', e.target.value)}
             >
-              <option>Escolha uma categoria</option>
-              <option>Design</option>
-              <option>Tecnologia</option>
-              <option>Arquitetura</option>
+              {categories.map(category=>(
+                <option value={category._id}>{category.name}</option>
+              ))}
             </Form.Control>
           </Form.Group>
 

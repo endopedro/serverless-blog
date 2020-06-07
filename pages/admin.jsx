@@ -6,13 +6,14 @@ import Sidebar from '@components/admin/layout/sidebar'
 import Editors from '@components/admin/editors'
 import AllPosts from '@components/admin/allPosts'
 import Pages from '@components/admin/pages'
+import Categories from '@components/admin/categories'
 import EditProfile from '@components/admin/editProfile'
 import LoadingPage from '@components/loadingPage'
 import Login from '@pages/login'
 import { useUser } from '@lib/hooks'
 
 const IndexPage = ({ page, action }) => {
-  const initialPages = ['dashboard', 'posts', 'editProfile', 'pages']
+  const initialPages = ['dashboard', 'posts', 'editProfile', 'pages', 'categories']
 
   const [pages, setPages] = useState(initialPages)
   const [loading, setLoading] = useState(true)
@@ -44,7 +45,8 @@ const IndexPage = ({ page, action }) => {
     posts: <AllPosts action={action} setTitle={setTitle}/>,
     editProfile: <EditProfile />,
     editors: <Editors setTitle={setTitle}/>,
-    pages: <Pages setTitle={setTitle}/>
+    pages: <Pages setTitle={setTitle}/>,
+    categories: <Categories />
   }
 
   return (

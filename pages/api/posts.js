@@ -26,7 +26,7 @@ handler.use(middleware)
 
 handler.get(async (req, res) => {
   if(req.query.pages) {
-    const pages = await req.db.collection('pages').find().toArray()
+    const pages = await req.db.collection('pages').find().sort({ $natural: -1 }).toArray()
     return res.json(pages)
 
   } else if(req.query.page) {
@@ -39,6 +39,8 @@ handler.get(async (req, res) => {
     const post = await req.db.collection('posts').findOne({ slug: req.query.slug })
     if(post) {
       post.author = extractUser(await req.db.collection('users').findOne({ _id: post.author_id }))
+      const category = await req.db.collection('categories').findOne({_id: post.category})
+      post.category = category.name
       req.db.collection('posts').updateOne( { "_id": post._id }, { $inc: { "clicks": 1 }})
     } else {
       res.json({error: 'Post não encontrado.'})
@@ -46,6 +48,7 @@ handler.get(async (req, res) => {
     res.json(post)
 
   } else {
+    const categories = await req.db.collection('categories').find().toArray()
     const posts = await req.db.collection('posts').aggregate([
       {
         $lookup:
@@ -57,7 +60,8 @@ handler.get(async (req, res) => {
           }
       }
     ]).toArray()
-    res.json(extractPosts(posts))
+
+    res.json(extractPosts(posts.reverse(), categories))
   }
 })
 
@@ -134,7 +138,7 @@ handler.post(upload.single('thumb'), async (req, res) => {
         date: new Date(),
         title,
         slug,
-        category,
+        category: category ? mongodb.ObjectId(category) : null,
         content: JSON.parse(content),
         clicks: 0,
         thumb: thumb ? thumb : null,
@@ -231,7 +235,7 @@ handler.patch(upload.single('thumb'),async (req, res) => {
           author_id: mongodb.ObjectId(req.user._id),
           ...(title && { title }),
           ...(slug && { slug }),
-          ...(category && { category }),
+          category: category ? mongodb.ObjectId(category) : null,
           content: JSON.parse(content),
           ...(thumb && { thumb }),
           tags: JSON.parse(tags),
