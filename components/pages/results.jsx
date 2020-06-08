@@ -13,7 +13,7 @@ const Results = (props) => {
   }
 
   const searchInPosts = (term) => {
-    setPosts(state.posts.filter(post => post.title.includes(term)))
+    setPosts(state.posts.filter(post => post.title.toLowerCase().includes(term.toLowerCase())))
   }
 
   useEffect(() => {
