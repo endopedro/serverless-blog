@@ -41,7 +41,7 @@ handler.get(async (req, res) => {
       post.author = extractUser(await req.db.collection('users').findOne({ _id: post.author_id }))
       const category = await req.db.collection('categories').findOne({_id: post.category})
       post.category = category.name
-      req.db.collection('posts').updateOne( { "_id": post._id }, { $inc: { "clicks": 1 }})
+      // req.db.collection('posts').updateOne( { "_id": post._id }, { $inc: { "clicks": 1 }})
     } else {
       res.json({error: 'Post não encontrado.'})
     }
@@ -145,6 +145,8 @@ handler.post(upload.single('thumb'), async (req, res) => {
         tags: JSON.parse(tags),
       })
       .then(({ ops }) => ops[0])
+
+    post.author = extractUser(req.user)
 
     res.status(201).json(post)
   }

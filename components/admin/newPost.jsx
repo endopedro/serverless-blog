@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import slugify from 'slugify'
 import { Form, Button, Col } from 'react-bootstrap'
 import dynamic from 'next/dynamic'
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
-import draftToHtml from 'draftjs-to-html'
+// import draftToHtml from 'draftjs-to-html'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFeatherAlt, faPencilAlt, faArrowCircleLeft, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-import { useUser } from '@lib/hooks'
-import { getCategories, getPost } from '@lib/crud-helpers'
+import { getPost } from '@lib/crud-helpers'
+import { BlogContext } from '@contexts/blogContext'
 
 const Editor = dynamic(
   () => import('react-draft-wysiwyg').then(mod => mod.Editor),
@@ -17,12 +18,12 @@ const Editor = dynamic(
 )
 
 const NewPost = props => {
+  const router = useRouter()
+  const [state, dispatch] = useContext(BlogContext)
   const postThumbRef = React.createRef()
-  const [user, { mutate }] = useUser()
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
   const [thumbName, setThumbName] = useState(null)
-  const [categories, setCategories] = useState([])
   const [tagsInput, setTagsInput] = useState('')
   const [postForm, setPostForm] = useState({
     title: '',
@@ -52,20 +53,16 @@ const NewPost = props => {
     }
   }
 
-  const fetchCategories = async () => {
-    setCategories(await getCategories())
-  }
-
   useEffect(() => {
-    if(categories.length > 0) setPostForm({...postForm, category: categories[0]._id})
-  }, [categories])
+    if(state.categories.length > 0 && !postForm.category) setPostForm({...postForm, category: state.categories[0]._id})
+  }, [state.categories])
 
-  const loadPostToEdit = async () => {
-    const post = await getPost(props.postSlug)
-    if(post.slug) {
+  const getPostToEdit = () => {
+    const post = state.posts.find(post => post.slug == props.postSlug)
+    if(post) {
       setPostForm({
         ...postForm,
-        category: post.category,
+        category: post.category ? state.categories.find(cat => cat.name == post.category)._id : state.categories[0]._id,
         content: EditorState.createWithContent(convertFromRaw((post.content))),
         slug: post.slug,
         tags: post.tags,
@@ -78,9 +75,8 @@ const NewPost = props => {
   }
 
   useEffect(() => {
-    fetchCategories()
-    if(props.postSlug) loadPostToEdit()
-  }, [])
+    if(props.postSlug) getPostToEdit()
+  }, [state.posts, props.postSlug])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -94,24 +90,34 @@ const NewPost = props => {
     formData.append('content', JSON.stringify(convertToRaw(postForm.content.getCurrentContent())))
     if (postThumbRef.current.files[0]) formData.append('thumb', postThumbRef.current.files[0])
 
-    // formData.user = user
     const res = await fetch('/api/posts', {
       method: postForm.method,
-      // headers: { 'Content-Type': 'application/json' },
-      // body: JSON.stringify(formData),
       body: formData,
     })
     if (res.status === 201) {
       const postObj = await res.json()
+      if(postForm.method == 'POST') {
+        insertPost(postObj)
+        router.push(`/admin?posts=true`)
+      }
+      else updatePost(postForm.slug)
       setSuccessMsg(`Post ${postForm.method == "POST" ? 'criado' : 'editado'} com sucesso.`)
     } else {
       setErrorMsg(await res.text())
     }
   }
 
-  const handleEditor = (editorState) => {
-    handlePostForm('content', editorState)
+  const insertPost = (post) =>
+    dispatch({ type: 'INSERT_POST', payload: post })
+
+  const updatePost = async (slug) =>{
+    const post = await getPost(slug)
+    dispatch({ type: 'UPDATE_POST', payload: post })
   }
+
+  // const handleEditor = (editorState) => {
+  //   handlePostForm('content', editorState)
+  // }
 
   const handlePostForm = (fieldName, value) => {
     // console.log(draftToHtml((convertToRaw(postForm.content.getCurrentContent()))))
@@ -157,8 +163,8 @@ const NewPost = props => {
               value={postForm.category}
               onChange={e => handlePostForm('category', e.target.value)}
             >
-              {categories.map(category=>(
-                <option value={category._id}>{category.name}</option>
+              {state.categories.map((category,key)=>(
+                <option key={key} value={category._id}>{category.name}</option>
               ))}
             </Form.Control>
           </Form.Group>
@@ -179,7 +185,7 @@ const NewPost = props => {
 
           <Form.Row className="align-items-center mb-3">
             <Col sm={3}>
-            <Form.Label for="tags">Tags</Form.Label>
+            <Form.Label htmlFor="tags">Tags</Form.Label>
               <div className="d-flex">
                 <Form.Control
                   id="tags"
@@ -198,7 +204,7 @@ const NewPost = props => {
                 </Button>
               </div>
               <div>
-                {postForm.tags.map(tag => <Button variant="info" size="sm" className="mr-2" onClick={()=>removeTag(tag)}>{tag}</Button>)}
+                {postForm.tags.map((tag,key) => <Button key={key} variant="info" size="sm" className="mr-2" onClick={()=>removeTag(tag)}>{tag}</Button>)}
               </div>
             </Col>
           </Form.Row>

@@ -1,4 +1,5 @@
 import React, { useReducer, createContext } from "react"
+import _ from 'lodash'
 
 export const BlogContext = createContext()
 
@@ -19,6 +20,23 @@ const reducer = (state, action) => {
       return {
         ...state,
         posts: [...action.payload]
+      };
+    case "REMOVE_POST":
+      return {
+        ...state,
+        posts: [...state.posts].filter(post => (post._id != action.payload))
+      };
+    case "INSERT_POST":
+      action.payload.category = state.categories.find(cat => cat._id == action.payload.category).name
+      return {
+        ...state,
+        posts: [action.payload, ...state.posts]
+      };
+    case "UPDATE_POST":
+      state.posts[state.posts.indexOf(state.posts.find(post => post._id == action.payload._id))] = action.payload
+      return {
+        ...state,
+        posts: [...state.posts]
       };
     case "SET_PAGES":
       return {
