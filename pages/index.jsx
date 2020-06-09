@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
 
-import { getPost, getPage, getCategories } from '@lib/crud-helpers'
+import { getPost, getPage, getUser } from '@lib/crud-helpers'
 import { BlogContext } from '@contexts/blogContext'
 
 import Layout from '@components/layout/layout'
@@ -9,6 +9,7 @@ import Header from '@components/layout/header'
 import Posts from '@components/pages/posts'
 import Post from '@components/pages/post'
 import Page from '@components/pages/page'
+import Profile from '@components/pages/profile'
 import Results from '@components/pages/results'
 import LoadingPage from '@components/loadingPage'
 
@@ -25,6 +26,8 @@ const IndexPage = () => {
   const getPostBySlug = (slug) => state.posts.find(post => post.slug == slug)
 
   const getPageBySlug = (slug) => state.pages.find(page => page.slug == slug)
+
+  const getUserById = (id) => state.users.find(user => user._id == id)
 
   const goToPosts = () => {
     setComponentToShow(<Posts />)
@@ -57,6 +60,19 @@ const IndexPage = () => {
     setHeaderInfo(page.title, page.thumb)
   }
 
+  const goToProfile = async (id) => {
+    let fetchUser = {}
+    if(!state.users.includes(getUserById(id))) {
+      setIsLoading(true)
+      fetchUser = await getUser(id)
+      setIsLoading(false)
+      if(!fetchUser._id) return
+    }
+    const user = fetchUser._id ? fetchUser : getUserById(id)
+    setComponentToShow(<Profile user={user}/>)
+    setHeaderInfo("Perfil", null)
+  }
+
   const goToResults = (query, type, title) => {
     setComponentToShow(<Results query={query} type={type}/>)
     setHeaderInfo(title , null)
@@ -68,6 +84,7 @@ const IndexPage = () => {
     else if (router.query.category) goToResults(router.query.category, 'category', router.query.category)
     else if (router.query.search) goToResults(router.query.search, 'search', `Pesquisa: ${router.query.search}`)
     else if (router.query.tag) goToResults(router.query.tag, 'tag', `Tag: ${router.query.tag}`)
+    else if (router.query.profile) goToProfile(router.query.profile)
     else goToPosts()
   }, [router.query])
 

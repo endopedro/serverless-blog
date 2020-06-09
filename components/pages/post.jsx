@@ -38,7 +38,6 @@ import { BlogContext } from '@contexts/blogContext'
     return `${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`
   }
 
-  console.log(state.users)
    return (
     <Container>
       {post && (
@@ -51,7 +50,7 @@ import { BlogContext } from '@contexts/blogContext'
             {user && (<EditPageIcon slug={post.slug}/>)}
           </div>
           <h2 className="post-title">{post.title}</h2>
-          <Link href={`/?profile=${props.post.author.name}`} >
+          <Link href={`/?profile=${props.post.author._id}`} >
             <div className="post-author">
               <span className="info-item author"><FontAwesomeIcon icon={faFeatherAlt} /> {author.name}</span>
               <span className="info-item"><FontAwesomeIcon icon={faCalendarAlt} /> {getPostDate(post.date)}</span>

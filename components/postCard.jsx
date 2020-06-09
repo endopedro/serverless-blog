@@ -21,7 +21,7 @@ const PostCard = (props) => {
           />
         </div>
         <div className="post-card-body">
-          <Link href={`/?profile=${props.post.author.name}`} >
+          <Link href={`/?profile=${props.post.author._id}`} >
             <Image
               cloudName={cloudName}
               className="post-author-image"
