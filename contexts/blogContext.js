@@ -86,6 +86,16 @@ const reducer = (state, action) => {
         ...state,
         categories: [...action.payload]
       };
+    case "REMOVE_CATEGORY":
+      return {
+        ...state,
+        categories: [...state.categories].filter(category => (category._id != action.payload))
+      };
+    case "INSERT_CATEGORY":
+      return {
+        ...state,
+        categories: [action.payload, ...state.categories]
+      };
     case "SET_HEADER_INFO":
       return {
         ...state,

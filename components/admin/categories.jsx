@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import DataTable from 'react-data-table-component'
 import { Button, Form, FormControl } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,10 +7,17 @@ import { useRouter } from 'next/router'
 import ReactLoading from 'react-loading'
 import { getCategories } from '@lib/crud-helpers'
 
+import { BlogContext } from '@contexts/blogContext'
+
 const Categories = () => {
-  const [categories, setCategories] = useState([])
+  const [state, dispatch] = useContext(BlogContext)
+  // const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [categoryInput, setCategoryInput] = useState('')
+
+  useEffect(() => {
+    setLoading(false)
+  }, [state.categories])
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -22,11 +29,14 @@ const Categories = () => {
     if (res.status === 201) {
       const newCat = await res.json()
       console.log(newCat.name+' cadastrada com sucesso')
-      handleFetchCategories()
+      insertCat(newCat)
     } else {
       console.log(await res.text())
     }
   }
+
+  const insertCat = (cat) =>
+    dispatch({ type: 'INSERT_CATEGORY', payload: cat })
 
   const deleteCat = async (id) => {
     const res = await fetch('/api/categories', {
@@ -36,22 +46,25 @@ const Categories = () => {
     })
     if (res.status === 201) {
       const delCat = await res.json()
-      console.log(delCat.name+' deletada com sucesso')
-      handleFetchCategories()
+      console.log(id+' deletada com sucesso')
+      removeCat(id)
     } else {
       console.log(await res.text())
     }
   }
 
-  useEffect(() => {
-    handleFetchCategories()
-  }, [])
+  const removeCat = (id) =>
+    dispatch({ type: 'REMOVE_CATEGORY', payload: id })
 
-  const handleFetchCategories = async () => {
-    setLoading(true)
-    setCategories(await getCategories())
-    setLoading(false)
-  }
+  // useEffect(() => {
+  //   handleFetchCategories()
+  // }, [])
+
+  // const handleFetchCategories = async () => {
+  //   setLoading(true)
+  //   setCategories(await getCategories())
+  //   setLoading(false)
+  // }
 
   const columns = [
     {
@@ -87,15 +100,14 @@ const Categories = () => {
         title="Todas as categorias"
         // noTableHead={true}
         columns={columns}
-        data={categories}
+        data={state.categories}
         keyField="_id"
-        striped={true}
-        highlightOnHover={true}
         pointerOnHover
-        dense={true}
+        striped
+        highlightOnHover
+        dense
         progressPending={loading}
         progressComponent={<ReactLoading type="spin" color="#0D7EA6" className="my-5"/>}
-        onRowClicked={row => editPage(row._id)}
         noDataComponent="Não há dados para exibir."
       />
     </div>
