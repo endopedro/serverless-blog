@@ -32,7 +32,7 @@ const NewPage = props => {
     method: 'POST'
   })
 
-  const getPageToEdit = async () => {
+  const getPageToEdit = () => {
     const page = state.pages.find(page => page.slug == props.pageSlug)
     if(page) {
       setPageForm({

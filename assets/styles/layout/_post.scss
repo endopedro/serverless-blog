@@ -50,6 +50,16 @@
     .info-item {
       margin-right: 1rem;
       font-size: 0.875rem;
+      transition: 0.3s;
+
+      &.author {
+        cursor: pointer;
+
+        &:hover {
+          color: darken($info, 10%);
+          transform: translateY(-1px);
+        }
+      }
     }
   }
 

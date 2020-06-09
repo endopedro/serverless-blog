@@ -29,7 +29,7 @@ handler.use(middleware)
 handler.get(async (req, res) => {
   if (req.query.all) {
     const users = await req.db.collection('users').find().toArray()
-    return res.json({ users: users.map(user=>extractUser(user)) })
+    return res.json(users.reverse().map(user=>extractUser(user)))
   }
 
   if (req.query.id) {
@@ -117,6 +117,11 @@ handler.delete(async (req, res) => {
   }
 
   const { editor } = req.body
+
+  if(editor.role == 'admin') {
+    res.status(401).end()
+    return
+  }
 
   const user = await req.db
     .collection('users')

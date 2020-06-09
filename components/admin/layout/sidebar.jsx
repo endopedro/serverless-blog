@@ -13,7 +13,7 @@ const Sidebar = (props) => {
   useEffect(() => {
     if(props.title=='Posts'||props.title=='Novo Post'||props.title=='Editar Post') setActivePage('posts')
     else if(props.title=='Editar Perfil') setActivePage('editProfile')
-    else if(props.title=='Editores'&&user) setActivePage('editors')
+    else if(props.title=='Editores'||props.title=='Novo Editor'||props.title=='Editar Editor') setActivePage('editors')
     else if(props.title=='Páginas'||props.title=='Nova Página'||props.title=='Editar Página') setActivePage('pages')
     else if(props.title=='Categorias') setActivePage('categories')
     else setActivePage('dashboard')

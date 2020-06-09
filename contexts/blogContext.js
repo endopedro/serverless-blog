@@ -7,6 +7,7 @@ const initialState = {
   pages: [],
   posts: [],
   categories: [],
+  users: [],
   headerInfo: {
     title: 'Serverless Blog',
     thumb: null
@@ -55,11 +56,30 @@ const reducer = (state, action) => {
       };
     case "UPDATE_PAGE":
       state.pages[state.pages.indexOf(state.pages.find(page => page._id == action.payload._id))] = action.payload
-      console.log(state.pages)
-      console.log(action.payload)
       return {
         ...state,
         pages: [...state.pages]
+      };
+    case "SET_USERS":
+      return {
+        ...state,
+        users: [...action.payload]
+      };
+    case "REMOVE_USER":
+      return {
+        ...state,
+        users: [...state.users].filter(user => (user._id != action.payload))
+      };
+    case "INSERT_USER":
+      return {
+        ...state,
+        users: [action.payload, ...state.users]
+      };
+    case "UPDATE_USER":
+      state.users[state.users.indexOf(state.users.find(user => user._id == action.payload._id))] = action.payload
+      return {
+        ...state,
+        users: [...state.users]
       };
     case "SET_CATEGORIES":
       return {

@@ -1,47 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import DataTable from 'react-data-table-component'
 import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router'
 import ReactLoading from 'react-loading'
+import Link from 'next/link'
 
-import NewEditor from '@components/admin/newEditor'
+import { BlogContext } from '@contexts/blogContext'
+import { useUser } from '@lib/hooks'
 
-const Users = (props) => {
-  useEffect(() => {
-    getUsers()
-  }, [])
-
-  const actions = ['new', 'edit']
-
-  const getUserFromId = id => {
-    return users.find(user => user._id == id)
-  }
-
-  // const router = useRouter()
-  const [users, setUsers] = useState([])
-  const [action, setAction] = useState(actions.includes(props.action) ? props.action : null)
-  const [selectedUser, setSelectedUser] = useState(null)
+const Users = () => {
+  const [user, { mutate }] = useUser()
+  const [state, dispatch] = useContext(BlogContext)
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
 
-  const getUsers = async () => {
-    setLoading(true)
-    const res = await fetch('/api/users?all=true')
-    const json = await res.json()
-    setUsers(json.users.filter(user => (user.role!='admin')))
+  useEffect(() => {
+    if (user.role!='admin') router.push(`/admin`)
+  }, [])
+
+  useEffect(() => {
     setLoading(false)
-  }
+  }, [state.users])
 
-  const editUser = id => {
-    setAction('edit')
-    setSelectedUser(getUserFromId(id))
-  }
+  const getUserFromId = id => state.users.find(user => user._id == id)
 
-  const goToEditors = () => {
-    props.setTitle('Editores')
-    setAction(null)
-  }
+  const editUser = id => router.push(`/admin?editEditor=${getUserFromId(id)._id}`)
+
+  const removeUser = (id) =>
+    dispatch({ type: 'REMOVE_USER', payload: id })
 
   const deleteUser = async (id) => {
     const user = getUserFromId(id)
@@ -53,7 +41,7 @@ const Users = (props) => {
     })
     if (res.status === 201) {
       console.log(`Editor ${user.name} deletado com sucesso!`)
-      getUsers()
+      removeUser(id)
     } else {
       console.log("erro: " + await res.text())
     }
@@ -77,38 +65,24 @@ const Users = (props) => {
     }
   ];
 
-  if(action == 'edit' && selectedUser) {
-    props.setTitle('Editar Editor')
-    return <NewEditor goToEditors={goToEditors} selectedEditor={selectedUser} />
-  }
-
-  if(action == 'new') {
-    props.setTitle('Cadastrar editor')
-    return <NewEditor goToEditors={goToEditors} />
-  }
-
   return (
     <div className="admin-content-element">
-      <Button
-        variant="info"
-        size="sm"
-        className="mb-3"
-        onClick={() => setAction('new')}
-      >
-        <FontAwesomeIcon icon={faPlusCircle} className="mr-2"/>
-        Adicionar editor
-      </Button>
+      <Link href="/admin?newEditor=true" passHref>
+        <Button variant="info" size="sm" className="mb-3">
+          <FontAwesomeIcon icon={faPlusCircle} className="mr-2"/>
+          Adicionar editor
+        </Button>
+      </Link>
 
        <DataTable
         title="Todos os editores"
-        // noTableHead={true}
         columns={columns}
-        data={users}
+        data={state.users}
         keyField="_id"
-        striped={true}
-        highlightOnHover={true}
         pointerOnHover
-        dense={true}
+        striped
+        highlightOnHover
+        dense
         progressPending={loading}
         progressComponent={<ReactLoading type="spin" color="#0D7EA6" className="my-5"/>}
         onRowClicked={row => editUser(row._id)}

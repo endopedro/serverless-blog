@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react'
 
 import { BlogContext } from '@contexts/blogContext'
-import { getPosts, getPages, getCategories } from '@lib/crud-helpers'
+import { getPosts, getPages, getCategories, getUsers } from '@lib/crud-helpers'
 import SiteHead from '@components/admin/layout/siteHead'
 
 import '@assets/styles/main.scss'
@@ -27,10 +27,17 @@ export default ({ children }) => {
       payload: await getCategories()
     })
 
+  const loadUsers = async () =>
+    dispatch({
+      type: 'SET_USERS',
+      payload: await getUsers()
+    })
+
   useEffect(() => {
     if(state.pages.length < 1) loadPages()
     if(state.posts.length < 1) loadPosts()
     if(state.categories.length < 1) loadCategories()
+    if(state.users.length < 1) loadUsers()
   }, [])
 
   return (

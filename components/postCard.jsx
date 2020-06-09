@@ -21,11 +21,13 @@ const PostCard = (props) => {
           />
         </div>
         <div className="post-card-body">
-          <Image
-            cloudName={cloudName}
-            className="post-author-image"
-            publicId={props.post.author.profilePicture ? props.post.author.profilePicture : `${process.env.WEB_URI}/no-pic.jpg`}
-          />
+          <Link href={`/?profile=${props.post.author.name}`} >
+            <Image
+              cloudName={cloudName}
+              className="post-author-image"
+              publicId={props.post.author.profilePicture ? props.post.author.profilePicture : `${process.env.WEB_URI}/no-pic.jpg`}
+            />
+          </Link>
           <h5 className="post-title">{props.post.title}</h5>
         </div>
         <div className="post-card-footer"></div>

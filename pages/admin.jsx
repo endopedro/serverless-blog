@@ -8,6 +8,7 @@ import Sidebar from '@components/admin/layout/sidebar'
 import TopBar from '@components/admin/layout/topBar'
 import Dashboard from '@components/admin/dashboard'
 import Editors from '@components/admin/editors'
+import NewEditor from '@components/admin/newEditor'
 import AllPosts from '@components/admin/allPosts'
 import NewPost from '@components/admin/newPost'
 import NewPage from '@components/admin/newPage'
@@ -45,7 +46,9 @@ const IndexPage = ({ page, action }) => {
     else if (router.query.newPost) handlePages(<NewPost />, 'Novo Post')
     else if (router.query.editPost) handlePages(<NewPost postSlug={router.query.editPost} />, 'Editar Post')
     else if (router.query.editProfile) handlePages(<EditProfile />, 'Editar Perfil')
-    else if (router.query.editors && user.role=='admin') handlePages(<Editors />, 'Editores')
+    else if (router.query.editors) handlePages(<Editors />, 'Editores')
+    else if (router.query.newEditor) handlePages(<NewEditor />, 'Novo Editor')
+    else if (router.query.editEditor) handlePages(<NewEditor editorId={router.query.editEditor} />, 'Editar Editor')
     else if (router.query.pages) handlePages(<Pages />, 'Páginas')
     else if (router.query.newPage) handlePages(<NewPage />, 'Nova Página')
     else if (router.query.editPage) handlePages(<NewPage pageSlug={router.query.editPage}/>, 'Editar Página')
