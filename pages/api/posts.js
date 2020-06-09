@@ -184,6 +184,7 @@ handler.patch(upload.single('thumb'),async (req, res) => {
     if (req.file) {
       const image = await cloudinary.uploader.upload(req.file.path)
       thumb = image.public_id
+      if(thumb) cloudinary.uploader.destroy(currentThumb)
     }
 
     const page = await req.db.collection('pages').updateOne(
@@ -196,7 +197,7 @@ handler.patch(upload.single('thumb'),async (req, res) => {
           ...(thumb && { thumb }),
         },
       },
-    ).then(cloudinary.uploader.destroy(currentThumb))
+    ).then()
 
     res.status(201).json(page)
 
@@ -228,6 +229,7 @@ handler.patch(upload.single('thumb'),async (req, res) => {
     if (req.file) {
       const image = await cloudinary.uploader.upload(req.file.path)
       thumb = image.public_id
+      if(thumb) cloudinary.uploader.destroy(currentThumb)
     }
 
     const post = await req.db.collection('posts').updateOne(
@@ -243,7 +245,7 @@ handler.patch(upload.single('thumb'),async (req, res) => {
           tags: JSON.parse(tags),
         },
       },
-    ).then(cloudinary.uploader.destroy(currentThumb))
+    ).then()
 
     res.status(201).json(post)
   }
