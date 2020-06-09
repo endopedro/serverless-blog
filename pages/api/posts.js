@@ -34,6 +34,8 @@ handler.get(async (req, res) => {
     if(page) res.json(page)
     else res.json({error: 'Página não encontrada.'})
 
+  } else if(req.query.incView) {
+    req.db.collection('posts').updateOne( { "slug": req.query.incView }, { $inc: { "clicks": 1 }})
   } else if(req.query.slug) {
     // const post = await req.db.collection('posts').findOneAndUpdate({"slug": req.query.slug },{ $inc: { "clicks": 1 } })
     const post = await req.db.collection('posts').findOne({ slug: req.query.slug })

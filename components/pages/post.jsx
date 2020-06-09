@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFeatherAlt, faCalendarAlt, faEye, faTags, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -8,11 +8,24 @@ import Link from 'next/link'
 import { useUser } from '@lib/hooks'
 
 import EditPageIcon from '@components/editPageIcon'
+import { incPostView } from '@lib/crud-helpers'
+import { BlogContext } from '@contexts/blogContext'
 
  const Post = (props) => {
   const [user, { mutate }] = useUser()
   const post = props.post
   const author = props.post.author
+  const [state, dispatch] = useContext(BlogContext)
+
+  useEffect(() => {
+    incPostView(props.post.slug)
+    props.post.clicks+=1
+    updatePost(props.post)
+  }, [props.post])
+
+  const updatePost = async (post) =>{
+    dispatch({ type: 'UPDATE_POST', payload: post })
+  }
 
   // const convertedState = convertFromRaw((post.content))
   // const editorValue = EditorState.createWithContent(convertedState)
