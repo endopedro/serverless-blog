@@ -37,6 +37,31 @@
         margin-right: 1rem;
       }
     }
+
+    .edit-post {
+      position: absolute;
+      right: 0;
+      top: 0;
+      background-color: $red;
+      border-radius: $rounded-pill;
+      height: 40px;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate(30%, -30%);
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: $box-shadow;
+
+      &:hover {
+        background-color: darken($red, 20%);
+      }
+
+      .edit-icon {
+        color: $white;
+      }
+    }
   }
 
   .post-author {

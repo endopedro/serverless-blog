@@ -1,13 +1,14 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFeatherAlt, faCalendarAlt, faEye, faTags } from '@fortawesome/free-solid-svg-icons'
+import { faFeatherAlt, faCalendarAlt, faEye, faTags, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import Link from 'next/link'
-
+import { useUser } from '@lib/hooks'
 
  const Post = (props) => {
+  const [user, { mutate }] = useUser()
   const post = props.post
   const author = props.post.author
 
@@ -31,6 +32,11 @@ import Link from 'next/link'
               <h5 className="post-category">#{post.category}</h5>
             </Link>
             <div className="post-clicks"><FontAwesomeIcon icon={faEye} className="eye-icon" />{post.clicks+1}</div>
+            {user && (
+              <Link href={`/admin?editPost=${post.slug}`} passHref>
+                <div className="edit-post"><FontAwesomeIcon icon={faPencilAlt} className="edit-icon" /></div>
+              </Link>
+            )}
           </div>
           <h2 className="post-title">{post.title}</h2>
           <div className="post-author">
