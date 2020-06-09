@@ -18,6 +18,34 @@
       padding: 1rem;
       border-radius: $border-radius-sm;
       margin-bottom: 2rem;
+
+      &.metric {
+        border-left: $info 0.25rem solid;
+
+        .content-title {
+          color: $info;
+          text-align: center;
+          text-transform: uppercase;
+          margin-bottom: 1rem;
+        }
+
+        .metric-element {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 1rem;
+
+          .content-icon {
+            margin-right: 0.75rem;
+          }
+        }
+      }
+    }
+
+    .admin-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 

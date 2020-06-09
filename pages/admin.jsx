@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 
 import { useUser } from '@lib/hooks'
@@ -7,6 +6,7 @@ import { useUser } from '@lib/hooks'
 import Layout from '@components/admin/layout/layout'
 import Sidebar from '@components/admin/layout/sidebar'
 import TopBar from '@components/admin/layout/topBar'
+import Dashboard from '@components/admin/dashboard'
 import Editors from '@components/admin/editors'
 import AllPosts from '@components/admin/allPosts'
 import NewPost from '@components/admin/newPost'
@@ -50,7 +50,7 @@ const IndexPage = ({ page, action }) => {
     else if (router.query.newPage) handlePages(<NewPage />, 'Nova Página')
     else if (router.query.editPage) handlePages(<NewPage pageSlug={router.query.editPage}/>, 'Editar Página')
     else if (router.query.categories) handlePages(<Categories />, 'Categorias')
-    else handlePages(<h1>conteudo</h1>, 'Dashboard')
+    else handlePages(<Dashboard />, 'Dashboard')
   }, [router.query])
 
   if (loading) return <LoadingPage />
