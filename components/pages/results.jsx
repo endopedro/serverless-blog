@@ -16,9 +16,14 @@ const Results = (props) => {
     setPosts(state.posts.filter(post => post.title.toLowerCase().includes(term.toLowerCase())))
   }
 
+  const getPostsByTag = (tag) => {
+    setPosts(state.posts.filter(post => post.tags.includes(tag)))
+  }
+
   useEffect(() => {
     if(props.type == 'category') getPostsByCategory(props.query)
     else if(props.type == 'search') searchInPosts(props.query)
+    else if(props.type == 'tag') getPostsByTag(props.query)
   }, [state.posts, props])
 
   return (

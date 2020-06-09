@@ -57,17 +57,17 @@ const IndexPage = () => {
     setHeaderInfo(page.title, page.thumb)
   }
 
-  const goToResults = (query, type) => {
+  const goToResults = (query, type, title) => {
     setComponentToShow(<Results query={query} type={type}/>)
-    const title = type == 'search' ? `Pesquisa: ${query}` : query
     setHeaderInfo(title , null)
   }
 
   useEffect(() => {
     if (router.query.post) goToPost(router.query.post)
     else if (router.query.page) goToPage(router.query.page)
-    else if (router.query.category) goToResults(router.query.category, 'category')
-    else if (router.query.search) goToResults(router.query.search, 'search')
+    else if (router.query.category) goToResults(router.query.category, 'category', router.query.category)
+    else if (router.query.search) goToResults(router.query.search, 'search', `Pesquisa: ${router.query.search}`)
+    else if (router.query.tag) goToResults(router.query.tag, 'tag', `Tag: ${router.query.tag}`)
     else goToPosts()
   }, [router.query])
 

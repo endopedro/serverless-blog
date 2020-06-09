@@ -58,7 +58,11 @@ import { BlogContext } from '@contexts/blogContext'
           {post.tags.length > 0 && (
             <div className="post-tags">
               <FontAwesomeIcon icon={faTags} className="tag-icon"/>
-              {post.tags.map((tag,key) => (<div className="post-tag" key={key}>{tag}</div>))}
+              {post.tags.map((tag,key) => (
+                <Link href={`/?tag=${tag}`} passHref>
+                  <div className="post-tag" key={key}>{tag}</div>
+                </Link>
+              ))}
             </div>
           )}
         </div>
