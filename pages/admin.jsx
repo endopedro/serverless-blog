@@ -60,7 +60,7 @@ const IndexPage = ({ page, action }) => {
     <Layout>
       {user && (
         <div className="admin">
-          <Sidebar query={router.query} />
+          <Sidebar title={title} />
           <div className="admin-content">
             <TopBar />
             <h2 className="admin-action-label text-capitalize">{title}</h2>
