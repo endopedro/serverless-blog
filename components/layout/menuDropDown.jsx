@@ -29,11 +29,13 @@ const MenuDropDown = (props) => {
     <ClickOutHandler onClickOut={handleClickOut}>
       <div className="menu-dropdown d-none d-md-block">
         <div className="picture" onClick={()=>setShowDropDown(!showDropDown)} >
-          <Image
-            cloudName={cloudName}
-            publicId={user.profilePicture ? user.profilePicture : `${process.env.WEB_URI}/no-pic.jpg`}
-            className="user-image"
-            />
+          {user && (
+            <Image
+              cloudName={cloudName}
+              publicId={user.profilePicture ? user.profilePicture : `${process.env.WEB_URI}/no-pic.jpg`}
+              className="user-image"
+              />
+          )}
         </div>
         <div className={dropdownClass}>
           {props.admin ? (
