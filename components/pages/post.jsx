@@ -7,6 +7,8 @@ import draftToHtml from 'draftjs-to-html'
 import Link from 'next/link'
 import { useUser } from '@lib/hooks'
 
+import EditPageIcon from '@components/editPageIcon'
+
  const Post = (props) => {
   const [user, { mutate }] = useUser()
   const post = props.post
@@ -32,11 +34,7 @@ import { useUser } from '@lib/hooks'
               <h5 className="post-category">#{post.category}</h5>
             </Link>
             <div className="post-clicks"><FontAwesomeIcon icon={faEye} className="eye-icon" />{post.clicks+1}</div>
-            {user && (
-              <Link href={`/admin?editPost=${post.slug}`} passHref>
-                <div className="edit-post"><FontAwesomeIcon icon={faPencilAlt} className="edit-icon" /></div>
-              </Link>
-            )}
+            {user && (<EditPageIcon slug={post.slug}/>)}
           </div>
           <h2 className="post-title">{post.title}</h2>
           <div className="post-author">
