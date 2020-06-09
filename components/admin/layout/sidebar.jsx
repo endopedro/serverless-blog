@@ -32,11 +32,6 @@ const Sidebar = (props) => {
           <span className="text-capitalize">Posts</span>
         </div>
       </Link>
-      <Link href="/admin?editProfile=true" passHref>
-        <div className="sidebar-item">
-          <span className="text-capitalize">Editar perfil</span>
-        </div>
-      </Link>
       {user.role=='admin' && (
         <Link href="/admin?editors=true" passHref>
         <div className="sidebar-item">

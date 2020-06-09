@@ -6,6 +6,7 @@ import { useUser } from '@lib/hooks'
 
 import Layout from '@components/admin/layout/layout'
 import Sidebar from '@components/admin/layout/sidebar'
+import TopBar from '@components/admin/layout/topBar'
 import Editors from '@components/admin/editors'
 import AllPosts from '@components/admin/allPosts'
 import NewPost from '@components/admin/newPost'
@@ -57,13 +58,16 @@ const IndexPage = ({ page, action }) => {
 
   return (
     <Layout>
-      <div className="admin">
-        <Sidebar query={router.query} />
-        <div className="admin-content">
-          <h2 className="admin-action-label text-capitalize">{title}</h2>
-          { activePage }
+      {user && (
+        <div className="admin">
+          <Sidebar query={router.query} />
+          <div className="admin-content">
+            <TopBar />
+            <h2 className="admin-action-label text-capitalize">{title}</h2>
+            { activePage }
+          </div>
         </div>
-      </div>
+      )}
     </Layout>
   )
 }

@@ -50,10 +50,10 @@ const MainNav = () => {
             </NavDropdown>
           )}
         </Nav>
-          <FormControl 
-            type="text" 
-            placeholder="Pesquisar" 
-            className="mr-sm-2 navbar-search" 
+          <FormControl
+            type="text"
+            placeholder="Pesquisar"
+            className="mr-sm-2 navbar-search"
             onChange={e => setSearchText(e.target.value)}
             onKeyPress={event => {
               if (event.key === 'Enter') goSearch()
@@ -61,7 +61,7 @@ const MainNav = () => {
           />
         {user && (
           <>
-            <MenuDropDown handleLogout={handleLogout} user={user}/>
+            <MenuDropDown />
             <Nav className="mr-auto d-md-none">
               <div className="dropdown-divider" role="separator"></div>
               <Link href="/admin" passHref><Nav.Link className="text-info">Administração</Nav.Link></Link>
