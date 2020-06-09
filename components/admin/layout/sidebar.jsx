@@ -32,6 +32,11 @@ const Sidebar = (props) => {
           <span className="text-capitalize">Posts</span>
         </div>
       </Link>
+      <Link href="/admin?pages=true" passHref>
+        <div className="sidebar-item">
+          <span className="text-capitalize">Páginas</span>
+        </div>
+      </Link>
       {user.role=='admin' && (
         <Link href="/admin?editors=true" passHref>
         <div className="sidebar-item">
@@ -39,11 +44,6 @@ const Sidebar = (props) => {
         </div>
         </Link>
       )}
-      <Link href="/admin?pages=true" passHref>
-        <div className="sidebar-item">
-          <span className="text-capitalize">Páginas</span>
-        </div>
-      </Link>
       <Link href="/admin?categories=true" passHref>
         <div className="sidebar-item">
           <span className="text-capitalize">Categorias</span>

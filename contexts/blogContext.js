@@ -43,6 +43,24 @@ const reducer = (state, action) => {
         ...state,
         pages: [...action.payload]
       };
+    case "REMOVE_PAGE":
+      return {
+        ...state,
+        pages: [...state.pages].filter(page => (page._id != action.payload))
+      };
+    case "INSERT_PAGE":
+      return {
+        ...state,
+        pages: [action.payload, ...state.pages]
+      };
+    case "UPDATE_PAGE":
+      state.pages[state.pages.indexOf(state.pages.find(page => page._id == action.payload._id))] = action.payload
+      console.log(state.pages)
+      console.log(action.payload)
+      return {
+        ...state,
+        pages: [...state.pages]
+      };
     case "SET_CATEGORIES":
       return {
         ...state,

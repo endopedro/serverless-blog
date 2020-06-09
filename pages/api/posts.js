@@ -102,7 +102,7 @@ handler.post(upload.single('thumb'), async (req, res) => {
         slug,
         content: JSON.parse(content),
         thumb: thumb ? thumb : null,
-      })
+      }).then(({ ops }) => ops[0])
 
     res.status(201).json(page)
   } else {

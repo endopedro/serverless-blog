@@ -20,6 +20,8 @@ const AllPosts = (props) => {
 
   const getPostFromId = id => state.posts.find(post => post._id == id)
 
+  const editPost = (postId) => router.push(`/admin?editPost=${getPostFromId(postId).slug}`)
+
   const removePost = (id) =>
     dispatch({ type: 'REMOVE_POST', payload: id })
 
@@ -33,8 +35,6 @@ const AllPosts = (props) => {
       console.log("erro: " + await res.text())
     }
   }
-
-  const editPost = (postId) => router.push(`/admin?editPost=${getPostFromId(postId).slug}`)
 
   const columns = [
     {

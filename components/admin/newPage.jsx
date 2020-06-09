@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import { useUser } from '@lib/hooks'
+import React, { useState, useEffect, useContext } from 'react'
 import slugify from 'slugify'
 import { Form, Button, Col } from 'react-bootstrap'
 import dynamic from 'next/dynamic'
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
-import draftToHtml from 'draftjs-to-html'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFeatherAlt, faPencilAlt, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { getPage } from '@lib/crud-helpers'
+import { BlogContext } from '@contexts/blogContext'
 
 const Editor = dynamic(
   () => import('react-draft-wysiwyg').then(mod => mod.Editor),
@@ -17,8 +17,9 @@ const Editor = dynamic(
 )
 
 const NewPage = props => {
+  const [state, dispatch] = useContext(BlogContext)
+  const router = useRouter()
   const pageThumbRef = React.createRef()
-  const [user, { mutate }] = useUser()
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
   const [thumbName, setThumbName] = useState(null)
@@ -31,9 +32,9 @@ const NewPage = props => {
     method: 'POST'
   })
 
-  const loadPageToEdit = async () => {
-    const page = await getPage(props.pageSlug)
-    if(page.slug) {
+  const getPageToEdit = async () => {
+    const page = state.pages.find(page => page.slug == props.pageSlug)
+    if(page) {
       setPageForm({
         ...pageForm,
         content: EditorState.createWithContent(convertFromRaw((page.content))),
@@ -47,8 +48,8 @@ const NewPage = props => {
   }
 
   useEffect(() => {
-    if(props.pageSlug) loadPageToEdit()
-  }, [])
+    if(props.pageSlug) getPageToEdit()
+  }, [state.pages, props.pageSlug])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -66,18 +67,26 @@ const NewPage = props => {
     })
     if (res.status === 201) {
       const pageObj = await res.json()
+      if(pageForm.method == 'POST') {
+        insertPage(pageObj)
+        router.push(`/admin?pages=true`)
+      }
+      else updatePage(pageForm.slug)
       setSuccessMsg(`Page ${pageForm.method == "POST" ? 'criada' : 'editada'} com sucesso.`)
     } else {
       setErrorMsg(await res.text())
     }
   }
 
-  const handleEditor = (editorState) => {
-    handlePageForm('content', editorState)
+  const insertPage = (page) =>
+    dispatch({ type: 'INSERT_PAGE', payload: page })
+
+  const updatePage = async (slug) =>{
+    const page = await getPage(slug)
+    dispatch({ type: 'UPDATE_PAGE', payload: page })
   }
 
   const handlePageForm = (fieldName, value) => {
-    // console.log(draftToHtml((convertToRaw(pageForm.content.getCurrentContent()))))
     setPageForm(prevState => ({
       ...prevState,
       [fieldName]: value
