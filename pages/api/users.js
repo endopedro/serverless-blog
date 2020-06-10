@@ -37,6 +37,11 @@ handler.get(async (req, res) => {
     return res.json(extractUser(user))
   }
 
+  if (req.query.count) {
+    const count = await req.db.collection('users').countDocuments()
+    return res.json(count)
+  }
+
   return res.json({ user: extractUser(req.user) })
 })
 
@@ -79,6 +84,13 @@ handler.patch(async (req, res) => {
 })
 
 handler.post(async (req, res) => {
+  const countUsers = await req.db.collection('users').countDocuments()
+  
+  if (!req.user && countUsers > 0) {
+    res.status(403).send('Not logged.')
+    return
+  }
+
   const role = req.query.editor ? 'editor' : 'admin'
   const { name, password } = req.body
   const email = normalizeEmail(req.body.email)

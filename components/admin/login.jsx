@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { Form, Button } from 'react-bootstrap'
 
 import { useUser } from '@lib/hooks'
 import LoginLayout from '@components/layout/loginLayout'
+import SignUp from '@components/admin/signup'
+import { countUsers } from '@lib/crud-helpers'
 
 const LoginPage = () => {
-  const router = useRouter()
   const [errorMsg, setErrorMsg] = useState('')
   const [user, { mutate }] = useUser()
-  const [loading, setLoading] = useState(true)
+  const [usersCount, setUsersCount] = useState(null)
 
   useEffect(() => {
-    if (user) {
-      router.push('/admin')
-    } else if (user === null) {
-      setLoading(false)
-    }
-  }, [user])
+    handleUsersCount()
+  }, [])
+  
+  const handleUsersCount = async () => setUsersCount(await countUsers())
 
   async function onSubmit(e) {
     e.preventDefault()
@@ -40,7 +38,7 @@ const LoginPage = () => {
     }
   }
 
-  if (loading) return <h1>LOADING...</h1>
+  if (usersCount == 0) return <SignUp/>
 
   return (
     <LoginLayout>

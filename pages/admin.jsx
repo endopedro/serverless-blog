@@ -4,6 +4,7 @@ import Head from 'next/head'
 
 import { useUser } from '@lib/hooks'
 
+import Login from '@components/admin/login'
 import Layout from '@components/admin/layout/layout'
 import Sidebar from '@components/admin/layout/sidebar'
 import TopBar from '@components/admin/layout/topBar'
@@ -17,9 +18,8 @@ import Pages from '@components/admin/pages'
 import Categories from '@components/admin/categories'
 import EditProfile from '@components/admin/editProfile'
 import LoadingPage from '@components/loadingPage'
-import Login from '@pages/login'
 
-const IndexPage = ({ page, action }) => {
+const IndexPage = () => {
   const router = useRouter()
 
   const [loading, setLoading] = useState(true)
