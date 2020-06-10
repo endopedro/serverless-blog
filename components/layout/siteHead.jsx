@@ -11,16 +11,16 @@ const SiteHead = () => (
     />
     <meta
       name="description"
-      content="This is a blog made using the serveless stack"
+      content="Um blog desenvolvido com a stack serverless."
     />
     <meta property="og:title" content="Serverless Blog" />
     <meta
       property="og:description"
-      content="This is a blog made using the serveless stack"
+      content="Um blog desenvolvido com a stack serverless."
     />
     <meta
       property="og:image"
-      content=""
+      content={`${process.env.WEB_URI}/blog.png`}
     />
   </Head>
 )

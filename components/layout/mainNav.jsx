@@ -25,7 +25,7 @@ const MainNav = () => {
   }
 
   return (
-    <Navbar expand="md" className="main-nav">
+    <Navbar expand="md" className="main-nav" fixed="top" variant="light" bg="light">
       <Link href="/" passHref>
         <Navbar.Brand>Blog</Navbar.Brand>
       </Link>
