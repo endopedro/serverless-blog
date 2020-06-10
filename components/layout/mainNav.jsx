@@ -37,9 +37,6 @@ const MainNav = () => {
               <Nav.Link>{page.title}</Nav.Link>
             </Link>
           ))}
-          {/* <Link href={`/?categories=true`} passHref>
-            <Nav.Link>Categorias</Nav.Link>
-          </Link> */}
           {state.categories.length > 0 && (
             <NavDropdown title="Categorias" id="basic-nav-dropdown">
               {state.categories.map((category, index) => (

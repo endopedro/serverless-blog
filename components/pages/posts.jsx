@@ -14,7 +14,7 @@ const Posts = () => {
       <Row>
         {state.posts ? (
           state.posts.map((post, index) => (
-          <Col lg={4} className="mb-4" key={index}>
+          <Col lg={4} md={6} className="mb-4" key={index}>
             <PostCard post={post} />
           </Col>))
         ):(

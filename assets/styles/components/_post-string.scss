@@ -50,6 +50,13 @@
       border: 0.25rem solid $white;
       box-shadow: $box-shadow;
       margin-bottom: -1rem;
+      transition: 0.3s;
+
+      &:hover {
+        box-shadow: $box-shadow-lg;
+        transform: translate(-50%, -53%);
+        border: 0.25rem solid $info;
+      }
     }
 
     .post-title {

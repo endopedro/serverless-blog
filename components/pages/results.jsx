@@ -28,7 +28,7 @@ const Results = (props) => {
 
   return (
     <Container>
-      <div className="single-page">
+      <div className="results">
         {posts.length > 0 ? (
           posts.map((post,key) => (<PostString key={key} post={post}/>))
         ) : (

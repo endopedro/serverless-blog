@@ -3,6 +3,7 @@
   padding: 3rem 0;
 
   .single-page {
+    margin-top: -150px;
     background-color: $white;
     padding: 2rem 1.5rem;
     box-shadow: $box-shadow;
@@ -15,24 +16,19 @@
       margin-bottom: 1.5rem;
       text-align: center;
     }
-
-    .page-content {
-
-    }
   }
 }
 
 @include media-breakpoint-up(md) {
-  .single-page {
-    padding: 3.125rem;
+  .page {
+    .single-page {
+      padding: 3.125rem;
+      margin-top: -100px;
 
-    .page-title {
-      margin-bottom: 0.5rem;
-      text-align: left;
-    }
-
-    .page-content {
-
+      .page-title {
+        margin-bottom: 0.5rem;
+        text-align: left;
+      }
     }
   }
 }
