@@ -15,7 +15,7 @@ const Page = (props) => {
     <Container>
       {page && (
         <div className="single-page">
-          {user && (<EditPageIcon page slug={page.slug}/>)}
+          {user && (<EditPageIcon type="Page" query={page.slug}/>)}
           {/* <h2 className="page-title">{page.title}</h2> */}
           <div className="page-content" dangerouslySetInnerHTML={{__html: getContent(page.content)}}></div>
         </div>

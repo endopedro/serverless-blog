@@ -13,7 +13,7 @@ const PostCard = (props) => {
     <Link href={`/?post=${props.post.slug}`} >
       <div className="post-card">
         <div className="post-card-header">
-          {user && (<EditPageIcon slug={props.post.slug}/>)}
+          {user && (<EditPageIcon type="Post" query={props.post.slug}/>)}
           <Image
             cloudName={cloudName}
             className="post-image"

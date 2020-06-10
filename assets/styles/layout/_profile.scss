@@ -1,0 +1,43 @@
+.profile {
+  background-color: $white;
+  padding: 2rem 1.5rem;
+  box-shadow: $box-shadow;
+  position: relative;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: $rounded-pill;
+    object-fit: cover;
+    box-shadow: $box-shadow;
+    margin-bottom: 1.5rem;
+  }
+
+  .profile-name {
+    margin-bottom: 0;
+  }
+
+  .profile-email {
+    margin-bottom: 2rem;
+  }
+
+  .profile-bio {
+    font-family: $font-family-monospace;
+    color: $code-color;
+  }
+
+  .divisor {
+    width: 50%;
+  }
+}
+
+@include media-breakpoint-up(md) {
+
+}

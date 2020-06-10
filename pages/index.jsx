@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 import { getPost, getPage, getUser } from '@lib/crud-helpers'
 import { BlogContext } from '@contexts/blogContext'
@@ -92,6 +93,12 @@ const IndexPage = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>
+          {state.headerInfo.title=='Serverless Blog' ? '' : 'Serverless Blog | '}
+          {state.headerInfo.title ? state.headerInfo.title : 'Post'}
+        </title>
+      </Head>
       <Header />
       <div className="page">
         { componentToShow }

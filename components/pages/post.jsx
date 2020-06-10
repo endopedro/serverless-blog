@@ -47,7 +47,7 @@ import { BlogContext } from '@contexts/blogContext'
               <h5 className="post-category">#{post.category}</h5>
             </Link>
             <div className="post-clicks"><FontAwesomeIcon icon={faEye} className="eye-icon" />{post.clicks+1}</div>
-            {user && (<EditPageIcon slug={post.slug}/>)}
+            {user && (<EditPageIcon type="Post" query={post.slug}/>)}
           </div>
           <h2 className="post-title">{post.title}</h2>
           <Link href={`/?profile=${props.post.author._id}`} >

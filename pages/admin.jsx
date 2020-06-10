@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 import { useUser } from '@lib/hooks'
 
@@ -61,6 +62,7 @@ const IndexPage = ({ page, action }) => {
 
   return (
     <Layout>
+      <Head><title>ADMIN | {title}</title></Head>
       {user && (
         <div className="admin">
           <Sidebar title={title} />
