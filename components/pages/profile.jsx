@@ -20,7 +20,7 @@ const Profile = (props) => {
   return (
     <Container>
       <div className="profile">
-        {(user._id==props.user._id) && (<EditPageIcon type="Editor" query={user._id}/>)}
+        {(user?._id==props.user._id) && (<EditPageIcon type="Profile" query={true}/>)}
         <Image
           cloudName={cloudName}
           className="profile-picture"

@@ -42,5 +42,9 @@
 @include media-breakpoint-up(md) {
   .profile {
     margin-top: -100px;
+
+    .profile-bio {
+      padding: 0 10%;
+    }  
   }
 }
