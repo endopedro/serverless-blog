@@ -12,7 +12,7 @@ const Posts = () => {
   return (
     <Container>
       <Row>
-        {state.posts ? (
+        {(state.posts.length > 0) ? (
           state.posts.map((post, index) => (
           <Col lg={4} md={6} className="mb-4" key={index}>
             <PostCard post={post} />
