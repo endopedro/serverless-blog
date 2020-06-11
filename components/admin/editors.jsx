@@ -70,7 +70,7 @@ const Users = () => {
       <Link href="/admin?newEditor=true" passHref>
         <Button variant="info" size="sm" className="mb-3">
           <FontAwesomeIcon icon={faPlusCircle} className="mr-2"/>
-          Adicionar editor
+          Novo editor
         </Button>
       </Link>
 
