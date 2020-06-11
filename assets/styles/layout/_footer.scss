@@ -3,7 +3,7 @@
   padding: 3rem 0 1rem;
 
   h2 {
-    font-weight: $font-weight-bold; 
+    font-weight: $font-weight-bold;
   }
 
   .footer-social {
@@ -22,7 +22,7 @@
       }
 
       &:hover {
-        color: $primary;
+        color: $info;
         transform: translateY(-5px);
     }
     }
