@@ -11,7 +11,7 @@ const TopBar = (props) => {
   const [user, { mutate }] = useUser()
 
   return (
-    <Navbar className="admin-topbar" variant="dark">
+    <Navbar className="admin-topbar" variant="dark" fixed="top">
       <Link href="/" passHref>
         <Navbar.Brand className="topbar-brand">BLOG</Navbar.Brand>
       </Link>
