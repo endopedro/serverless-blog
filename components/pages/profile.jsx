@@ -24,7 +24,7 @@ const Profile = (props) => {
         <Image
           cloudName={cloudName}
           className="profile-picture"
-          publicId={props.user.profilePicture ? props.user.profilePicture : `${process.env.WEB_URI}/bg.jpg`}
+          publicId={props.user.profilePicture ? props.user.profilePicture : `${process.env.WEB_URI}/no-pic.jpg`}
         />
         <h2 className="profile-name">{props.user.name}</h2>
         <span className="profile-email">{props.user.email}</span>
