@@ -22,6 +22,7 @@ const MainNav = () => {
 
   const goSearch = () => {
     if(searchText) router.push(`/?search=${searchText}`)
+    setSearchText('')
   }
 
   return (
@@ -52,6 +53,7 @@ const MainNav = () => {
             placeholder="Pesquisar"
             className="mr-sm-2 navbar-search"
             onChange={e => setSearchText(e.target.value)}
+            value={searchText}
             onKeyPress={event => {
               if (event.key === 'Enter') goSearch()
             }}
