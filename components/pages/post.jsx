@@ -50,12 +50,12 @@ import { BlogContext } from '@contexts/blogContext'
             {user && (<EditPageIcon type="Post" query={post.slug}/>)}
           </div>
           <h2 className="post-title">{post.title}</h2>
-          <Link href={`/?profile=${props.post.author._id}`} >
-            <div className="post-author">
+          <div className="post-author">
+            <Link href={`/?profile=${props.post.author._id}`} >
               <span className="info-item author"><FontAwesomeIcon icon={faFeatherAlt} /> {author.name}</span>
-              <span className="info-item"><FontAwesomeIcon icon={faCalendarAlt} /> {getPostDate(post.date)}</span>
-            </div>
-          </Link>
+            </Link>
+            <span className="info-item"><FontAwesomeIcon icon={faCalendarAlt} /> {getPostDate(post.date)}</span>
+          </div>
           <div className="post-content" dangerouslySetInnerHTML={{__html: getContent(post.content)}}></div>
           {post.tags.length > 0 && (
             <div className="post-tags">
