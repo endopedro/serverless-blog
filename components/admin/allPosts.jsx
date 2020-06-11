@@ -86,6 +86,8 @@ const AllPosts = (props) => {
         progressComponent={<ReactLoading type="spin" color="#0D7EA6" className="my-5"/>}
         noDataComponent="Não há dados para exibir"
         onRowClicked={row => editPost(row._id)}
+        paginationPerPage={10}
+        pagination={state.posts.length > 10}
       />
     </div>
   )

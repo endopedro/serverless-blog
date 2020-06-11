@@ -87,6 +87,8 @@ const Users = () => {
         progressComponent={<ReactLoading type="spin" color="#0D7EA6" className="my-5"/>}
         onRowClicked={row => editUser(row._id)}
         noDataComponent="Não há dados para exibir"
+        paginationPerPage={10}
+        pagination={state.users.length > 10}
       />
     </div>
   )
