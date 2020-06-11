@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Head from 'next/head'
 import { useUser } from '@lib/hooks'
 import { Form, Button, Row, Col } from 'react-bootstrap'
-import {Image} from 'cloudinary-react'
+import { Image } from 'cloudinary-react'
+import { extractUser } from '@lib/api-helpers'
+
+import { BlogContext } from '@contexts/blogContext'
 
 const EditProfile = () => {
+  const [state, dispatch] = useContext(BlogContext)
   const [user, { mutate }] = useUser()
   const [isUpdating, setIsUpdating] = useState(false)
   const [pictureName, setPictureName] = useState(null)
@@ -50,12 +54,16 @@ const EditProfile = () => {
         },
       })
       setMsg({ message: 'Profile updated' })
+      updateUser(extractUser({...user, ...newUserData.user}))
       setPictureName(null)
     } else {
       setMsg({ message: await res.text(), isError: true })
     }
     setIsUpdating(false)
   }
+
+  const updateUser = (user) =>
+    dispatch({ type: 'UPDATE_USER', payload: user })
 
   const handleSubmitPasswordChange = async (e) => {
     e.preventDefault()
