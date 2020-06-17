@@ -46,7 +46,7 @@ const MenuDropDown = (props) => {
           ) : (
             <>
               <Link href="/admin"><span className="dropdown-item">Administração</span></Link>
-              <Link href={`/?profile=${user._id}`}><span className="dropdown-item pb-2">Perfil</span></Link>
+              <Link href={`/?profile=${user?._id}`}><span className="dropdown-item pb-2">Perfil</span></Link>
               <div className="dropdown-divider m-0" role="separator"></div>
             </>
           )}
